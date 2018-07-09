@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="CreateCarForm.css">
+</head>
+<body>
+<main>
+    <form class="form">
+        <p class="form_field">
+            <label for="producer">Machine manufacturer</label>
+            <select class="form_field_select" id="producer" name="producer">
+                <option value="1">Kirlin-Stracke</option>
+                <option value="2">Muller, Goldner and Champlin</option>
+            </select>
+        </p>
+        <p class="form_field">
+            <label for="model">Model auto</label>
+            <select class="form_field_select" id="model" name="model">
+                <option value="1">Ohara</option>
+                <option value="2">Osinski</option>
+                <option value="3">Hagenes</option>
+                <option value="4">Rippin</option>
+                <option value="5">Gutmann</option>
+                <option value="6">Dubuque</option>
+            </select>
+        </p>
+        <p class="form_field">
+            <label for="body">Body type</label>
+            <select class="form_field_select" id="body" name="body">
+                <option value="1">Convertible</option>
+                <option value="2">Coupe</option>
+                <option value="3">Sedan</option>
+                <option value="4">SUV</option>
+                <option value="5">Van</option>
+            </select>
+        </p>
+        <p class="form_field">
+            <label for="year">Year</label>
+            <input id="year" name="year" type="number" min="1990" max="2018"/>
+            <label for="mileage">Mileage number</label>
+            <input id="mileage" name="mileage" type="number" min="0"/>
+        </p>
+        <p class="form_field">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3">
+        </textarea>
+        </p>
+        <input type="submit">
+    </form>
+</main>
+<script src="FormSubmit.js"></script>
+</body>
+
+</html>
