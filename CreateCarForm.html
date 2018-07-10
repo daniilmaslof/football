@@ -5,35 +5,22 @@
     <title>Title</title>
     <link rel="stylesheet" href="CreateCarForm.css">
 </head>
-<body>
+<body onload="loadMakes()">
 <main>
-    <form class="form">
-        <p class="form_field">
+    <form id="createCarForm" class="form" onsubmit="AJAXSubmit(this); return false" method="post" name="createFormCar">
+        <p class="form_field" >
             <label for="producer">Machine manufacturer</label>
-            <select class="form_field_select" id="producer" name="producer">
-                <option value="1">Kirlin-Stracke</option>
-                <option value="2">Muller, Goldner and Champlin</option>
+            <select disabled class="form_field_select" id="producer" onchange="loadModels(value)" name="producer">
             </select>
         </p>
         <p class="form_field">
             <label for="model">Model auto</label>
-            <select class="form_field_select" id="model" name="model">
-                <option value="1">Ohara</option>
-                <option value="2">Osinski</option>
-                <option value="3">Hagenes</option>
-                <option value="4">Rippin</option>
-                <option value="5">Gutmann</option>
-                <option value="6">Dubuque</option>
+            <select  disabled class="form_field_select" id="model" name="model">
             </select>
         </p>
         <p class="form_field">
             <label for="body">Body type</label>
             <select class="form_field_select" id="body" name="body">
-                <option value="1">Convertible</option>
-                <option value="2">Coupe</option>
-                <option value="3">Sedan</option>
-                <option value="4">SUV</option>
-                <option value="5">Van</option>
             </select>
         </p>
         <p class="form_field">
