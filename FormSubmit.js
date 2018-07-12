@@ -1,10 +1,10 @@
 /**
- * Creates a new EventEmitter. pattern program
- * @class{EventEmitter}
+ * Stores event handlers for the event and starts them at event occurs
+ * @description this class needs to when data comes from the server run all the functions that use this data
  */
 class EventEmitter {
   /**
-   * @constructor Create store function which will start after emit event.
+   * Create store function which will start after emit event.
    */
   constructor() {
     this.eventListenersStore = {};
@@ -13,8 +13,8 @@ class EventEmitter {
   /**
    * Add function which will start after emit event.
    *
-   * @param {string}eventName Name event  after emit run fn.
-   * @param {Function}fn Which will start after emit event.
+   * @param {string} eventName Name event  after emit run fn.
+   * @param {Function} fn Which will start after emit event.
    */
   subscribe(eventName, fn) {
     if (!this.eventListenersStore[eventName]) {
@@ -26,8 +26,8 @@ class EventEmitter {
   /**
    * Run all function subscribers with data after occurrence event.
    *
-   * @param {string}eventName Run all function  eventListenersStore[eventName].
-   * @param {Object}data Send to the function subscribers.
+   * @param {string} eventName Run all function  eventListenersStore[eventName].
+   * @param {Object} data Send to the function subscribers.
    */
   emit(eventName, data) {
     const event = this.eventListenersStore[eventName];
@@ -41,13 +41,12 @@ const eventEmitter = new EventEmitter();
 
 /**
  * Creates LoaderOptions to different select
- * @class{LoaderOptions}
  */
 class LoaderOptions {
   /**
-   *@constructor
-   * create loader options
-   * @param {string}select idDomElement
+   * Create loader options.
+   *
+   * @param {string} select IdDomElement.
    */
   constructor(select) {
     this.select = select;
@@ -58,7 +57,7 @@ class LoaderOptions {
   /**
    * Send get request to the url.
    *
-   * @param {string}url Get options by url.
+   * @param {string} url Get options by url.
    */
   loadDataOptionsbyXMLHttpRequest(url) {
     if (this.openXMLHttpRequest) {
@@ -79,21 +78,20 @@ class LoaderOptions {
         return;
       }
 
-      if ((this.request.status >= 200 && this.request.status <= 300) || this.request.status === 304) {
-        const obj = {};
+      if (
+        (this.request.status >= 200 && this.request.status <= 300) ||
+        this.request.status === 304
+      ) {
+        this.openXMLHttpRequest = false;
 
-        Object.assign(obj, JSON.parse(this.request.responseText));
-        Object.defineProperty(obj, 'selectId', {
-          value: this.select,
-        });
-        eventEmitter.emit('onreadystatechangeOption', obj);
+        const result = JSON.parse(this.request.responseText).results;
+
+        eventEmitter.emit('onreadystatechangeOption', { selectId: this.select, options: result });
       } else {
-        const obj = {
+        eventEmitter.emit('onreadystatechangeError', {
           selectId: this.select,
           errorMessage: this.request.status,
-        };
-
-        eventEmitter.emit('onreadystatechangeError', obj);
+        });
       }
     };
   }
@@ -114,22 +112,19 @@ const DictErrorMessages = new Map();
 
 DictErrorMessages.set(
   'model',
-  ` data on the model information could not upload  please try again choose Machine manufacturer`,
+  `data on the model information could not upload  please try again choose Machine manufacturer`,
 );
 DictErrorMessages.set(
   'producer',
   'data on the Machine manufacturer  could not upload  please reload page',
 );
-DictErrorMessages.set(
-  'body-types',
-  'data on the Body type could not upload  please reload page',
-);
+DictErrorMessages.set('body-types', 'data on the Body type could not upload  please reload page');
 
 /**
  * Create dom elements whith error message.
  *
- * @param {string}selectId IdDomElement.
- * @param {number}errorMessage Error code server.
+ * @param {string} selectId IdDomElement.
+ * @param {number} errorMessage Error code server.
  */
 function createError({selectId, errorMessage}) {
   const form = document.getElementById('createCarForm');
@@ -147,14 +142,14 @@ function createError({selectId, errorMessage}) {
 /**
  * Create dom elements(option) whith value = id and  text = name.
  *
- * @param {string}selectId IdDomElement.
- * @param {Array<objects>}results Array model from server.
+ * @param {string} selectId IdDomElement.
+ * @param {Array<objects>} results Array model from server.
  */
-function createOptions({selectId, results}) {
+function createOptions({selectId, options}) {
   const select = document.getElementById(selectId);
 
-  [...select.options].forEach(options => options.remove());
-  results.forEach(producer => {
+  [...select.options].forEach(option => option.remove());
+  options.forEach(producer => {
     const option = document.createElement('option');
 
     option.value = producer.id;
@@ -176,7 +171,7 @@ function dataBinding() {
 /**
  * Run after change select producer.
  *
- * @param {number}idProducer Value select Producer.
+ * @param {number} idProducer Value select Producer.
  */
 function loadModels(idProducer) {
   const loaderOptionsModel = new LoaderOptions('model');
