@@ -1,64 +1,166 @@
-// function AJAXSubmit(form) {
-//     if (form.checkValidity()) {
-//         let request = new XMLHttpRequest();
-//         let data = new FormData(form);
-//         request.open('Post', 's.com');
-//         request.onreadystatechange = () => {
-//             console.log(request.status);
-//             if (request.readyState !== 4) {
-//                 return;
-//             }
-//             if (request.status !== 200) {
-//
-//             } else {
-//                 console.log(request.responseText);
-//             }
-//         };
-//         request.send(data);
-//     }
-// }
+/**
+ * Creates a new EventEmitter. pattern program
+ * @class{EventEmitter} EventEmitter
+ */
+class EventEmitter {
+  /**
+   * @constructor Create store function which will start after emit event.
+   */
+  constructor() {
+    this.eventListenersStore = {};
+  }
 
+  /**
+   * Add function which will start after emit event.
+   *
+   * @param {string}eventName Name event  after emit run fn.
+   * @param {Function}fn Which will start after emit event.
+   */
+  subscribe(eventName, fn) {
+    if (!this.eventListenersStore[eventName]) {
+      this.eventListenersStore[eventName] = [];
+    }
+    this.eventListenersStore[eventName].push(fn);
+  }
+
+  /**
+   * Run all function subscribers with data after occurrence event.
+   *
+   * @param {string}eventName Run all function  eventListenersStore[eventName].
+   * @param {Object}data Send to the function subscribers.
+   */
+  emit(eventName, data) {
+    const event = this.eventListenersStore[eventName];
+
+    if (event) {
+      event.forEach(fn => fn(data));
+    }
+  }
+}
+
+const eventEmitter = new EventEmitter();
+
+/**
+ * Creates LoaderOptions to different select
+ * @class{LoaderOptions}
+ */
 class LoaderOptions {
+  /**
+   *@constructor
+   * create loader options
+   * @this  {LoaderOptions}
+   * @param {string}select idDomElement
+   */
   constructor(select) {
     this.select = select;
     this.request = null;
+    this.openXMLHttpRequest = false;
   }
 
-  loadDataOptions(url) {
-    if (this.request) {
+  /**
+   * Open XMLHttpRequest and send on url get request.
+   *
+   * @param {string}url Get options by url.
+   */
+  loadDataOptionsbyXMLHttpRequest(url) {
+    if (this.openXMLHttpRequest) {
+      this.openXMLHttpRequest = false;
       this.request.abort();
-      this.request = null;
-      console.log(this.request);
     }
     this.request = new XMLHttpRequest();
+    this.openXMLHttpRequest = true;
     this.request.open('GET', url, true);
     this.request.send();
+    /**
+     * Callback generates run all function when subscribe to event onreadystatechangeOption and onreadystatechangeError.
+     *
+     * @listens XMLHttpRequest.onreadystatechange
+     */
     this.request.onreadystatechange = () => {
       if (this.request.readyState !== 4) {
         return;
       }
-      if (this.request.status === 200) {
-        createOptions(this.select, JSON.parse(this.request.responseText));
+
+      if (this.request.status >= 200 && this.request.status <= 309) {
+        const obj = {};
+
+        Object.assign(obj, JSON.parse(this.request.responseText));
+        Object.defineProperty(obj, 'selectId', {
+          value: this.select,
+        });
+        eventEmitter.emit('onreadystatechangeOption', obj);
       } else {
-        createError(this.select, this.request.status);
+        const obj = {
+          selectId: this.select,
+          errorMessage: this.request.status,
+        };
+
+        eventEmitter.emit('onreadystatechangeError', obj);
       }
     };
   }
 }
 
-function createError(select, errorMessage) {
-  let form = document.getElementById('createCarForm');
+/**
+ * Remove dom elements whith error message.
+ */
+function clearError() {
+  const error = document.getElementsByClassName('error');
 
-  let error = document.createElement('span');
+  if (error.length) {
+    [...error].forEach(item => item.remove());
+  }
+}
+
+const DictErrorMessages = new Map();
+
+DictErrorMessages.set(
+  'model',
+  ` данные по Model auto не смогли загрузиться выберите занова Machine manufacturer`,
+);
+DictErrorMessages.set(
+  'producer',
+  'данные  Machine manufacturer не смогли загрузиться перезагрузити страницу',
+);
+DictErrorMessages.set(
+  'body-types',
+  'данные Body type не смогли загрузиться перезагрузити страницу',
+);
+
+/**
+ * Create dom elements whith error message.
+ *
+ * @param {string}selectId IdDomElement.
+ * @param {number}errorMessage Error code server.
+ */
+function createError({selectId, errorMessage}) {
+  const form = document.getElementById('createCarForm');
+  const select = document.getElementById(selectId);
+
+  select.disabled = true;
+
+  const error = document.createElement('span');
+
   error.classList.add('error');
-  error.innerText = `Ошибка сервера ${errorMessage} при загрузки ${select}`;
+  error.innerText = `Ошибка сервера ${errorMessage} ${DictErrorMessages.get(selectId)}`;
   form.appendChild(error);
 }
 
-function createOptions(selectId, options) {
-  let select = document.getElementById(selectId);
-  options.results.forEach(function (producer) {
-    let option = document.createElement('option');
+/**
+ * Create dom elements(option) whith value = id and  text = name.
+ *
+ * @param {string}selectId IdDomElement.
+ * @param {Array<objects>}results Array model from server.
+ */
+function createOptions({selectId, results}) {
+  const select = document.getElementById(selectId);
+
+  while (select.options.length > 1) {
+    select.options.remove(0);
+  }
+  results.forEach(producer => {
+    const option = document.createElement('option');
+
     option.value = producer.id;
     option.text = producer.name;
     select.options.add(option);
@@ -66,13 +168,37 @@ function createOptions(selectId, options) {
   select.disabled = false;
 }
 
-const loaderOptionsModel = new LoaderOptions('model');
-const loaderOptionsProducer = new LoaderOptions('producer');
-
-function loadModels(id) {
-  loaderOptionsModel.loadDataOptions(`https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${id}/models`);
+/**
+ * Subscribe to data coming from the server and  binding dom with data.
+ */
+function dataBinding() {
+  eventEmitter.subscribe('onreadystatechangeOption', createOptions);
+  eventEmitter.subscribe('onreadystatechangeOption', clearError);
+  eventEmitter.subscribe('onreadystatechangeError', createError);
 }
 
-function loadMakes() {
-  loaderOptionsProducer.loadDataOptions('https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes');
+/**
+ * Run after change select producer.
+ *
+ * @param {number}idProducer Value select Producer.
+ */
+function loadModels(idProducer) {
+  const loaderOptionsModel = new LoaderOptions('model');
+
+  loaderOptionsModel.loadDataOptionsbyXMLHttpRequest(
+    `https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
+  );
+}
+
+/**
+ * Run after load pages and loads producer.
+ */
+function onLoad() {
+  dataBinding();
+
+  const loaderOptionsProducer = new LoaderOptions('producer');
+
+  loaderOptionsProducer.loadDataOptionsbyXMLHttpRequest(
+    'https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
+  );
 }
