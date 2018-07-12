@@ -1,6 +1,6 @@
 /**
  * Creates a new EventEmitter. pattern program
- * @class{EventEmitter} EventEmitter
+ * @class{EventEmitter}
  */
 class EventEmitter {
   /**
@@ -32,9 +32,8 @@ class EventEmitter {
   emit(eventName, data) {
     const event = this.eventListenersStore[eventName];
 
-    if (event) {
-      event.forEach(fn => fn(data));
-    }
+    if (!event) return;
+    event.forEach(fn => fn(data));
   }
 }
 
@@ -48,7 +47,6 @@ class LoaderOptions {
   /**
    *@constructor
    * create loader options
-   * @this  {LoaderOptions}
    * @param {string}select idDomElement
    */
   constructor(select) {
@@ -58,7 +56,7 @@ class LoaderOptions {
   }
 
   /**
-   * Open XMLHttpRequest and send on url get request.
+   * Send get request to the url.
    *
    * @param {string}url Get options by url.
    */
@@ -81,7 +79,7 @@ class LoaderOptions {
         return;
       }
 
-      if (this.request.status >= 200 && this.request.status <= 309) {
+      if ((this.request.status >= 200 && this.request.status <= 300) || this.request.status === 304) {
         const obj = {};
 
         Object.assign(obj, JSON.parse(this.request.responseText));
@@ -116,15 +114,15 @@ const DictErrorMessages = new Map();
 
 DictErrorMessages.set(
   'model',
-  ` данные по Model auto не смогли загрузиться выберите занова Machine manufacturer`,
+  ` data on the model information could not upload  please try again choose Machine manufacturer`,
 );
 DictErrorMessages.set(
   'producer',
-  'данные  Machine manufacturer не смогли загрузиться перезагрузити страницу',
+  'data on the Machine manufacturer  could not upload  please reload page',
 );
 DictErrorMessages.set(
   'body-types',
-  'данные Body type не смогли загрузиться перезагрузити страницу',
+  'data on the Body type could not upload  please reload page',
 );
 
 /**
@@ -155,9 +153,7 @@ function createError({selectId, errorMessage}) {
 function createOptions({selectId, results}) {
   const select = document.getElementById(selectId);
 
-  while (select.options.length > 1) {
-    select.options.remove(0);
-  }
+  [...select.options].forEach(options => options.remove());
   results.forEach(producer => {
     const option = document.createElement('option');
 
