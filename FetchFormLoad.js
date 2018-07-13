@@ -50,11 +50,11 @@ function createOptions(selectId, options) {
   const select = document.getElementById(selectId);
 
   [...select.options].forEach(option => option.remove());
-  options.forEach(producer => {
+  options.forEach(optionData => {
     const option = document.createElement('option');
 
-    option.value = producer.id;
-    option.text = producer.name;
+    option.value = optionData.id;
+    option.text = optionData.name;
     select.options.add(option);
   });
   select.disabled = false;
