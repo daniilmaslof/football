@@ -44,7 +44,7 @@ function createError(selectId, errorMessage) {
  * Create dom elements(option) whith value = id and  text = name.
  *
  * @param {string} selectId IdDomElement.
- * @param {Array<objects>} results Array model from server.
+ * @param {Array<objects>} options Array model from server.
  */
 function createOptions(selectId, options) {
   const select = document.getElementById(selectId);
@@ -61,11 +61,6 @@ function createOptions(selectId, options) {
 }
 
 /**
- * Run after change select producer.
- *
- * @param {number} idProducer Value select Producer.
- */
-/**
  * Creates LoaderOptions to different select
  */
 class LoaderOptions {
@@ -80,6 +75,7 @@ class LoaderOptions {
     this.openXMLHttpRequest = false;
     this.controller = null;
   }
+
   /**
    * Load data from api by query to  select use Fetch.
    *
@@ -103,10 +99,10 @@ class LoaderOptions {
     })
       .then(response => {
         if ((response.status >= 200 && response.status < 300) || response.status === 304) {
-          return Promise.resolve(response.json());
+          return response.json();
         }
 
-        return Promise.reject(response.status);
+        throw new Error(response.status);
       })
       .then(response => {
         createOptions(this.select, response.results);
@@ -116,9 +112,9 @@ class LoaderOptions {
   }
 }
 
-function loadModels(idProducer) {
-  const loaderOptionsModel = new LoaderOptions('model');
+const loaderOptionsModel = new LoaderOptions('model');
 
+function loadModels(idProducer) {
   loaderOptionsModel.loadDataOptionsbyFetch(
     `https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
   );

@@ -11,7 +11,9 @@ class LoaderOptions {
     this.select = select;
     this.request = null;
     this.openXMLHttpRequest = false;
+    this.xhr = null;
   }
+
   /**
    * Create dom elements whith error message.
    *
@@ -19,7 +21,6 @@ class LoaderOptions {
    * @param {Function} callbackAjax Take (data,error) and run resolve(data) or reject(error).
    */
   ajaxGetOptionsData(urlQuery, callbackAjax) {
-    this.openXMLHttpRequest = true;
     $.ajax({
       method: 'GET',
       dataType: 'json',
@@ -30,10 +31,8 @@ class LoaderOptions {
        * @param {Object} data If request success  data =  options get downloaded from api.
        */
       success: data => {
-        Object.defineProperty(data, 'selectId', {
-          value: this.select,
-        });
-        callbackAjax(data);
+        this.openXMLHttpRequest = false;
+        callbackAjax({selectId: this.select, options: data.results});
       },
       /**
        * Call  reject a function with  xhr.status - HTTP status code.
@@ -41,14 +40,15 @@ class LoaderOptions {
        * @param {Object} xhr If request unsuccessful  xhr =  XMLHttpRequest.
        */
       error: xhr => {
-        const obj = {
-          errorMessage: xhr.status,
-        };
-
-        Object.defineProperty(obj, 'selectId', {
-          value: this.select,
-        });
-        callbackAjax(null, obj);
+        this.openXMLHttpRequest = false;
+        callbackAjax(null, {selectId: this.select, errorMessage: xhr.status});
+      },
+      beforeSend: xhr => {
+        if (this.openXMLHttpRequest) {
+          this.xhr.abort();
+        }
+        this.xhr = xhr;
+        this.openXMLHttpRequest = true;
       },
     });
   }
@@ -108,16 +108,17 @@ function createOptions(data) {
   const select = document.getElementById(data.selectId);
 
   [...select.options].forEach(option => option.remove());
-  data.results.forEach(producer => {
+  data.options.forEach(optionData => {
     const option = document.createElement('option');
 
     clearError();
-    option.value = producer.id;
-    option.text = producer.name;
+    option.value = optionData.id;
+    option.text = optionData.name;
     select.options.add(option);
   });
   select.disabled = false;
 }
+
 /**
  * bind function resolve reject and run their when run callbackAjax with data or error
  */
@@ -132,6 +133,7 @@ class CallbackFuctionHandlers {
     this.resolve = resolve;
     this.reject = reject;
   }
+
   /**
    * Launches handlers when called callback.
    *
@@ -145,15 +147,13 @@ class CallbackFuctionHandlers {
 }
 
 const callbackCreateHandlers = new CallbackFuctionHandlers(createOptions, createError);
-
+const loaderOptionsModel = new LoaderOptions('model');
 /**
  * Run after change select producer.
  *
  * @param {number}idProducer Value select Producer.
  */
 function loadModels(idProducer) {
-  const loaderOptionsModel = new LoaderOptions('model');
-
   loaderOptionsModel.ajaxGetOptionsData(
     `https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
     callbackCreateHandlers.callbackAjax.bind(callbackCreateHandlers),
