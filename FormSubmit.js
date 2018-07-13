@@ -77,16 +77,14 @@ class LoaderOptions {
       if (this.request.readyState !== 4) {
         return;
       }
-
+      this.openXMLHttpRequest = false;
       if (
-        (this.request.status >= 200 && this.request.status <= 300) ||
+        (this.request.status >= 200 && this.request.status < 300) ||
         this.request.status === 304
       ) {
-        this.openXMLHttpRequest = false;
-
         const result = JSON.parse(this.request.responseText).results;
 
-        eventEmitter.emit('onreadystatechangeOption', { selectId: this.select, options: result });
+        eventEmitter.emit('onreadystatechangeOption', {selectId: this.select, options: result});
       } else {
         eventEmitter.emit('onreadystatechangeError', {
           selectId: this.select,
