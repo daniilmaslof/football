@@ -77,16 +77,14 @@ class LoaderOptions {
       if (this.request.readyState !== 4) {
         return;
       }
-
+      this.openXMLHttpRequest = false;
       if (
-        (this.request.status >= 200 && this.request.status <= 300) ||
+        (this.request.status >= 200 && this.request.status < 300) ||
         this.request.status === 304
       ) {
-        this.openXMLHttpRequest = false;
-
         const result = JSON.parse(this.request.responseText).results;
 
-        eventEmitter.emit('onreadystatechangeOption', { selectId: this.select, options: result });
+        eventEmitter.emit('onreadystatechangeOption', {selectId: this.select, options: result});
       } else {
         eventEmitter.emit('onreadystatechangeError', {
           selectId: this.select,
@@ -149,11 +147,11 @@ function createOptions({selectId, options}) {
   const select = document.getElementById(selectId);
 
   [...select.options].forEach(option => option.remove());
-  options.forEach(producer => {
+  options.forEach(optionData => {
     const option = document.createElement('option');
 
-    option.value = producer.id;
-    option.text = producer.name;
+    option.value = optionData.id;
+    option.text = optionData.name;
     select.options.add(option);
   });
   select.disabled = false;
@@ -177,7 +175,7 @@ function loadModels(idProducer) {
   const loaderOptionsModel = new LoaderOptions('model');
 
   loaderOptionsModel.loadDataOptionsbyXMLHttpRequest(
-    `https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
+    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
   );
 }
 
@@ -190,6 +188,6 @@ function onLoad() {
   const loaderOptionsProducer = new LoaderOptions('producer');
 
   loaderOptionsProducer.loadDataOptionsbyXMLHttpRequest(
-    'https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
+    'https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
   );
 }
