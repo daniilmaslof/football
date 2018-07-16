@@ -10,7 +10,7 @@
     <form id="createCarForm" class="form" onsubmit="AJAXSubmit(this); return false" method="post" name="createFormCar">
         <p class="form_field">
             <label for="producer">Machine manufacturer</label>
-            <select disabled class="form_field_select" id="producer" onchange="loadModels(value)" name="producer">
+            <select disabled class="form_field_select" id="producer" onchange="loadModels(this.value)" name="producer">
             </select>
         </p>
         <p class="form_field">
@@ -36,7 +36,7 @@
         <button type="submit"></button>
     </form>
 </main>
-<script src="FetchFormLoad.js"></script>
+<script src="AjaxFormLoad.js"></script>
 </body>
 
 </html>

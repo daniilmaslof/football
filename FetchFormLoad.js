@@ -71,8 +71,6 @@ class LoaderOptions {
    */
   constructor(select) {
     this.select = select;
-    this.request = null;
-    this.openXMLHttpRequest = false;
     this.controller = null;
   }
 
@@ -116,7 +114,7 @@ const loaderOptionsModel = new LoaderOptions('model');
 
 function loadModels(idProducer) {
   loaderOptionsModel.loadDataOptionsbyFetch(
-    `https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
+    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
   );
 }
 
@@ -127,6 +125,6 @@ function onLoad() {
   const loaderOptionsProducer = new LoaderOptions('producer');
 
   loaderOptionsProducer.loadDataOptionsbyFetch(
-    'https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
+    'https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
   );
 }

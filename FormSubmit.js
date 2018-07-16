@@ -175,7 +175,7 @@ function loadModels(idProducer) {
   const loaderOptionsModel = new LoaderOptions('model');
 
   loaderOptionsModel.loadDataOptionsbyXMLHttpRequest(
-    `https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
+    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
   );
 }
 
@@ -188,6 +188,6 @@ function onLoad() {
   const loaderOptionsProducer = new LoaderOptions('producer');
 
   loaderOptionsProducer.loadDataOptionsbyXMLHttpRequest(
-    'https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
+    'https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
   );
 }

@@ -9,7 +9,6 @@ class LoaderOptions {
    */
   constructor(select) {
     this.select = select;
-    this.request = null;
     this.openXMLHttpRequest = false;
     this.xhr = null;
   }
@@ -111,11 +110,11 @@ function createOptions(data) {
   data.options.forEach(optionData => {
     const option = document.createElement('option');
 
-    clearError();
     option.value = optionData.id;
     option.text = optionData.name;
     select.options.add(option);
   });
+  clearError();
   select.disabled = false;
 }
 
@@ -123,6 +122,11 @@ function createOptions(data) {
  * bind function resolve reject and run their when run callbackAjax with data or error
  */
 class CallbackFuctionHandlers {
+  callbackAjax(data, error) {
+    if (data) this.resolve(data);
+    else this.reject(error);
+  }
+
   /**
    * Bind function.
    *
@@ -132,6 +136,7 @@ class CallbackFuctionHandlers {
   constructor(resolve, reject) {
     this.resolve = resolve;
     this.reject = reject;
+    this.callbackAjax = this.callbackAjax.bind(this);
   }
 
   /**
@@ -140,14 +145,11 @@ class CallbackFuctionHandlers {
    * @param {Object} data Success data from the server.
    * @param {Object} error Error code  from the server.
    */
-  callbackAjax(data, error) {
-    if (data) this.resolve(data);
-    else this.reject(error);
-  }
 }
 
 const callbackCreateHandlers = new CallbackFuctionHandlers(createOptions, createError);
 const loaderOptionsModel = new LoaderOptions('model');
+
 /**
  * Run after change select producer.
  *
@@ -155,8 +157,8 @@ const loaderOptionsModel = new LoaderOptions('model');
  */
 function loadModels(idProducer) {
   loaderOptionsModel.ajaxGetOptionsData(
-    `https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
-    callbackCreateHandlers.callbackAjax.bind(callbackCreateHandlers),
+    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
+    callbackCreateHandlers.callbackAjax,
   );
 }
 
@@ -167,7 +169,7 @@ function onLoad() {
   const loaderOptionsProducer = new LoaderOptions('producer');
 
   loaderOptionsProducer.ajaxGetOptionsData(
-    'https:/backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
-    callbackCreateHandlers.callbackAjax.bind(callbackCreateHandlers),
+    'https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
+    callbackCreateHandlers.callbackAjax,
   );
 }
