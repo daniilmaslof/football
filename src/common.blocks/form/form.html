@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="form.css">
+    <script src="../../lib/CallbackFunctionHandlers.js"></script>
+    <script src="../../services/Loader.js"></script>
+    <script src="form__field/form_field_select/form_field_select.js"></script>
+    <script src="form.js"></script>
+    <link rel="stylesheet" href="form__field/form_field_select/form_field_select.css">
+<body onload="onLoad()">
+<main>
+    <form id="createCarForm" class="form" onsubmit="AJAXSubmit(this); return false" method="post" name="createFormCar">
+        <p class="form_field">
+            <label for="producer">Machine manufacturer</label>
+            <select disabled class="form_field_select" id="producer" onchange="loadModels(this.value)" name="producer">
+            </select>
+        </p>
+        <p class="form_field">
+            <label for="model">Model auto</label>
+            <select disabled class="form_field_select" id="model" name="model">
+            </select>
+        </p>
+        <p class="form_field">
+            <label for="body">Body type</label>
+            <select class="form_field_select" id="body" name="body">
+            </select>
+        </p>
+        <p class="form_field">
+            <label for="year">Year</label>
+            <input id="year" name="year" type="number" min="1990" max="2018"/>
+            <label for="mileage">Mileage number</label>
+            <input id="mileage" name="mileage" type="number" min="0"/>
+        </p>
+        <p class="form_field">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3"></textarea>
+        </p>
+        <button type="submit"></button>
+    </form>
+</main>
+</body>
+</html>

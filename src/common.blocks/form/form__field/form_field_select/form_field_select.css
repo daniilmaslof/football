@@ -1,0 +1,10 @@
+.form_field_select {
+    background: transparent;
+    width: 268px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+}
+.error {
+    color: red;
+    width: 268px;
+}
