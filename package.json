@@ -1,23 +1,18 @@
 {
   "name": "daniil_maslov",
   "version": "0.0.1",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "ssh://daniilmaslov@gitblit.saritasa.com/jscamp/daniil_maslov.git"
-  },
+  "description": "",
   "scripts": {
     "lint": "eslint -c ./.eslintrc.yml \"./**/*.js\" && stylelint \"./**/*.css\"",
     "lint:fix": "eslint -c ./.eslintrc.yml \"./**/*.js\" --fix && stylelint \"./**/*.css\" --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {},
+  "license": "ISC",
   "devDependencies": {
     "@saritasa/eslint-config-base": "^0.1.1",
     "@saritasa/stylelint-config-react": "0.0.10",
     "babel-eslint": "^8.2.5",
     "eslint": "^5.1.0",
-    "eslint-config-airbnb-base": "^13.0.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-eslint-comments": "^3.0.1",
     "eslint-plugin-import": "^2.13.0",
@@ -25,7 +20,6 @@
     "eslint-plugin-prettier": "^2.6.2",
     "prettier": "^1.13.7",
     "stylelint": "^9.3.0",
-    "stylelint-config-saritasa-react": "0.0.7",
     "stylelint-declaration-use-variable": "^1.6.1",
     "stylelint-no-unsupported-browser-features": "^3.0.0"
   }
