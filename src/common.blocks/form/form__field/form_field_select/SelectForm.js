@@ -1,12 +1,12 @@
-const DictErrorMessages = new Map();
+const DictMessagesByErrorCode = new Map();
 
-DictErrorMessages.set('errorCode503', {
+DictMessagesByErrorCode.set(503, {
   model:
     'data on the model information could not upload  please try again choose Machine manufacturer',
   producer: 'data on the Machine manufacturer  could not upload  please reload page',
   'body-types': 'data on the Body type could not upload  please reload page',
 });
-DictErrorMessages.set('errorCode20', 'Please wait response load');
+DictMessagesByErrorCode.set(20, 'Please wait response load');
 
 /**
  * Creates a selector and methods for creating its options and errors.
@@ -56,9 +56,11 @@ class SelectForm {
 
     const errorDomElement = document.createElement('span');
 
-    if (error.code === 503)
-      errorMessage = DictErrorMessages.get(`errorCode${error.code}`)[this.selectId];
-    else errorMessage = `${error.message} ${DictErrorMessages.get(`errorCode${error.code}`)}`;
+    if (error.code === 503) {
+      const errorsMessagesForAllSelects = DictMessagesByErrorCode.get(error.code);
+
+      errorMessage = errorsMessagesForAllSelects[this.selectId];
+    } else errorMessage = `${error.message} ${DictMessagesByErrorCode.get(error.code)}`;
 
     errorDomElement.id = `error${this.selectId}`;
     errorDomElement.classList.add('error');
