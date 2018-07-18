@@ -38,7 +38,7 @@ class Loader {
 
         const error = new Error('Request failed');
 
-        error.status = response.status;
+        error.code = response.status;
         throw error;
       })
       .then(response => {
@@ -46,4 +46,24 @@ class Loader {
       })
       .catch(error => callback(null, error));
   }
+}
+
+/**
+ * Bind function.
+ *
+ * @param {Function} resolve Run  function with success.
+ * @param {Function} reject  Run  function with error.
+ * @returns {Function} - Function Callback.
+ */
+function createCallback(resolve, reject) {
+  /**
+   * Launches handlers when called callback.
+   *
+   * @param {Object} data Success data from the server.
+   * @param {Object} error Error code  from the server.
+   */
+  return function(data, error) {
+    if (error) reject(error);
+    else resolve(data);
+  };
 }

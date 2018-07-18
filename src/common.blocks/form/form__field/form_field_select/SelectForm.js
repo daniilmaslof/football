@@ -1,3 +1,13 @@
+const DictErrorMessages = new Map();
+
+DictErrorMessages.set('errorCode503', {
+  model:
+    'data on the model information could not upload  please try again choose Machine manufacturer',
+  producer: 'data on the Machine manufacturer  could not upload  please reload page',
+  'body-types': 'data on the Body type could not upload  please reload page',
+});
+DictErrorMessages.set('errorCode20', 'Please wait response load');
+
 /**
  * Creates a selector and methods for creating its options and errors.
  */
@@ -7,11 +17,9 @@ class SelectForm {
    *
    * @description maybe add DI for loaderOptions.
    * @param {string} selectId IdDomElement.
-   * @param {string} errorMessages Selective error.
    */
-  constructor(selectId, errorMessages) {
+  constructor(selectId) {
     this.selectId = selectId;
-    this.errorMessages = errorMessages;
     this.clearError = this.clearError.bind(this);
     this.createError = this.createError.bind(this);
     this.createOptions = this.createOptions.bind(this);
@@ -38,16 +46,19 @@ class SelectForm {
 
     select.disabled = true;
 
-    const errorMessage = `${error} ${this.errorMessages}`;
+    let errorMessage = null;
 
     const errorSelect = document.getElementById(`error${this.selectId}`);
 
-    if (errorSelect) {
-      if (errorSelect.innerText === errorMessage) return;
+    if (errorSelect && errorSelect.innerText !== errorMessage) {
       this.clearError();
     }
 
     const errorDomElement = document.createElement('span');
+
+    if (error.code === 503)
+      errorMessage = DictErrorMessages.get(`errorCode${error.code}`)[this.selectId];
+    else errorMessage = `${error.message} ${DictErrorMessages.get(`errorCode${error.code}`)}`;
 
     errorDomElement.id = `error${this.selectId}`;
     errorDomElement.classList.add('error');

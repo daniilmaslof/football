@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="form.css">
     <script src="../../lib/CallbackFunctionHandlers.js"></script>
     <script src="../../services/Loader.js"></script>
-    <script src="form__field/form_field_select/form_field_select.js"></script>
+    <script src="form__field/form_field_select/SelectForm.js"></script>
     <script src="form.js"></script>
-    <link rel="stylesheet" href="form__field/form_field_select/form_field_select.css">
+    <link rel="stylesheet" href="form__field/form_field_select/SelectForm.css">
 <body onload="onLoad()">
 <main>
     <form id="createCarForm" class="form" onsubmit="AJAXSubmit(this); return false" method="post" name="createFormCar">
@@ -25,8 +25,7 @@
         </p>
         <p class="form_field">
             <label for="body">Body type</label>
-            <select class="form_field_select" id="body" name="body">
-            </select>
+            <select class="form_field_select" id="body" name="body"></select>
         </p>
         <p class="form_field">
             <label for="year">Year</label>
