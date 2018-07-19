@@ -4,11 +4,8 @@
  * @param {string} url Data Table cars .
  */
 function clickPaginatorLinks(url) {
-  const tblBody = document.querySelector('.table_tbody');
-
-  [...tblBody.childNodes].forEach(row => row.remove());
-  document.querySelector('.paginator').remove();
-  loadTable(url);
+  const tblBody = document.querySelector('.table-tableBody');
+  TableCars.loadTable(url);
 }
 
 /**
@@ -26,9 +23,13 @@ function createPaginator(paginationData) {
 
   paginator.classList.add('paginator');
   for (let i = 1; i <= paginationData.total_pages; i++) {
-    const numberPage = document.createElement('span');
+    const numberPage = document.createElement('button');
 
-    numberPage.classList.add('page');
+    if (paginationData.current_page === i) {
+      numberPage.classList.add('active');
+      numberPage.disabled = true;
+    }
+    numberPage.classList.add('paginator-page');
 
     const textNumber = document.createTextNode(i);
 
@@ -38,19 +39,19 @@ function createPaginator(paginationData) {
   }
 
   if (paginationData.links.next) {
-    const arrow = document.createElement('span');
+    const arrow = document.createElement('button');
 
     arrow.addEventListener('click', clickPaginatorLinks.bind(null, paginationData.links.next));
-    arrow.classList.add('arrow');
+    arrow.classList.add('paginator-arrow');
     paginator.appendChild(arrow);
   }
 
   if (paginationData.links.previous) {
-    const arrow = document.createElement('span');
+    const arrow = document.createElement('button');
 
     arrow.addEventListener('click', clickPaginatorLinks.bind(null, paginationData.links.previous));
-    arrow.classList.add('arrow');
-    arrow.classList.add('arrow--rotate');
+    arrow.classList.add('paginator-arrow');
+    arrow.classList.add('paginator-arrow--rotate');
     paginator.insertBefore(arrow, paginator.firstChild);
   }
 

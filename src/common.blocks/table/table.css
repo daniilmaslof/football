@@ -5,27 +5,67 @@
     width: 100%;
 }
 
-.table_td {
+.table-td {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-.table_th {
+.table-td--description {
+    min-width: 50px;
+    max-width: 20vw;
     border: 1px solid #ddd;
+    padding: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+
+
+.button--fullSize {
+    width: 100%;
+
+    height: 100%;
     padding: 8px;
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
-    background-color: #4caf50;
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+.button--sort {
+    padding-right: 18px;
+    position: relative;
+}
+.button--sort:before,
+.button--sort:after {
+    border: 4px solid transparent;
+    content: "";
+    display: block;
+    height: 0;
+    right: 5px;
+    top: 50%;
+    position: absolute;
+    width: 0;
+}
+.button--sort:before {
+    border-bottom-color: #666;
+    margin-top: -9px;
+}
+.button--sort:after {
+    border-top-color: #666;
+    margin-top: 1px;
+}
+.table-th {
     color: white;
 }
 
-.table_tr {
+.table-tr {
     background-color: #f2f2f2;
     cursor: pointer;
 }
 
-.table_tr:hover {
+.table-tr:hover {
     background-color: #ddd !important;
 }
 
@@ -34,7 +74,7 @@
 
 }
 
-.page {
+.paginator-page {
     flex-basis: 35px;
     height: 35px;
     display: flex;
@@ -48,17 +88,17 @@
     cursor: pointer;
 }
 
-.page:hover {
+.paginator-page:hover {
     color: #333;
     background-color: #f2f2f2;
 }
 
-.page.active {
+.paginator-page.active {
     color: #fff;
     background: #6cf;
 }
 
-.arrow {
+.paginator-arrow {
     cursor: pointer;
     position: relative;
     flex-basis: 35px;
@@ -71,11 +111,13 @@
     border: 1px solid #0079c1;
     z-index: 1;
 }
-.arrow:hover {
+
+.paginator-arrow:hover {
     color: #333;
     background-color: #f2f2f2;
 }
-.arrow:before, .arrow:after {
+
+.paginator-arrow:before, .paginator-arrow:after {
     content: "";
     position: absolute;
     width: 35%;
@@ -88,16 +130,18 @@
     transition: all .2s linear;
 }
 
-.arrow:after {
+.paginator-arrow:after {
     z-index: 3;
     top: 59%;
     left: 55%;
     transform: translate(-50%, -50%) rotate(-45deg);
 }
-.arrow:after, .arrow:before {
+
+.paginator-arrow:after, .paginator-arrow:before {
     color: #fff;
 }
-.arrow--rotate{
+
+.paginator-arrow--rotate {
     transform: rotate(180deg);
 }
 

@@ -16,20 +16,15 @@ class Loader {
    * @param {Function} callback Take (data,error) and run resolve(data) or reject(error).
    */
   loadDatabyFetch(url, callback) {
-    let signalController;
-
     if (this.controller) {
       this.controller.abort();
       this.controller = null;
     }
-
     if ('AbortController' in window) {
       this.controller = new AbortController();
-
-      signalController = this.controller.signal;
     }
     fetch(url, {
-      signal: signalController,
+      signal: this.controller.signal,
     })
       .then(response => {
         if ((response.status >= 200 && response.status < 300) || response.status === 304) {
