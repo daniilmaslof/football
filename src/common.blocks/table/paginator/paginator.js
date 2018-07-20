@@ -1,11 +1,13 @@
 /**
- * Function callback click paginator child, run load Table by url + number page .
+ * Function callback click paginator child, run load Table by query containing link options &page = numberPage.
  *
- * @param {string} url Data Table cars .
+ * @param {number} numberPage Page Table cars.
  */
-function clickPaginatorLinks(url) {
-  const tblBody = document.querySelector('.table-tableBody');
-  TableCars.loadTable(url);
+function clickPaginatorLinks(numberPage) {
+  if (Url.includes('?')) Url += `&page=${Number(numberPage)}`;
+  else Url += `?page=${Number(numberPage)}`;
+
+  TableCars.loadTable(Url);
 }
 
 /**
@@ -19,8 +21,6 @@ function clickPaginatorLinks(url) {
 function createPaginator(paginationData) {
   const paginator = document.createElement('div');
 
-  const url = 'http://backend-jscamp.saritasa-hosting.com/api/cars?page=';
-
   paginator.classList.add('paginator');
   for (let i = 1; i <= paginationData.total_pages; i++) {
     const numberPage = document.createElement('button');
@@ -33,7 +33,7 @@ function createPaginator(paginationData) {
 
     const textNumber = document.createTextNode(i);
 
-    numberPage.addEventListener('click', clickPaginatorLinks.bind(null, url + i));
+    numberPage.addEventListener('click', clickPaginatorLinks.bind(null, i));
     numberPage.appendChild(textNumber);
     paginator.appendChild(numberPage);
   }
@@ -41,7 +41,12 @@ function createPaginator(paginationData) {
   if (paginationData.links.next) {
     const arrow = document.createElement('button');
 
-    arrow.addEventListener('click', clickPaginatorLinks.bind(null, paginationData.links.next));
+    const numberPageNext = paginationData.links.next.slice(
+      paginationData.links.next.indexOf('=') + 1,
+      paginationData.links.next.length,
+    );
+
+    arrow.addEventListener('click', clickPaginatorLinks.bind(null, numberPageNext));
     arrow.classList.add('paginator-arrow');
     paginator.appendChild(arrow);
   }
@@ -49,7 +54,12 @@ function createPaginator(paginationData) {
   if (paginationData.links.previous) {
     const arrow = document.createElement('button');
 
-    arrow.addEventListener('click', clickPaginatorLinks.bind(null, paginationData.links.previous));
+    const numberPagePrevious = paginationData.links.previous.slice(
+      paginationData.links.previous.indexOf('=') + 1,
+      paginationData.links.previous.length,
+    );
+
+    arrow.addEventListener('click', clickPaginatorLinks.bind(null, numberPagePrevious));
     arrow.classList.add('paginator-arrow');
     arrow.classList.add('paginator-arrow--rotate');
     paginator.insertBefore(arrow, paginator.firstChild);

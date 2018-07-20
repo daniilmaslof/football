@@ -1,22 +1,31 @@
-let URL = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
+let Url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
+const loaderTable = new Loader();
 
+/**
+ * Table Car elements may create table Head Body Paginatar.
+ */
 class TableCars {
   constructor() {
-    this.cars = [];
     this.generateTableBody = this.generateTableBody.bind(this);
     this.tableBody = null;
     this.tablePaginator = null;
   }
 
-  createTable() {
+  /**
+   * Create Table Head.
+   */
+  createTableHead() {
     const table = document.querySelector('table');
+
     table.classList.add('table');
-    let tableHead = new HeadTable();
+
+    const tableHead = new HeadTable();
+
     table.appendChild(tableHead.createrDomHeadTable());
   }
 
   /**
-   * Create Table dom elements with data table.
+   * Create paginator and table dom elements with data table.
    *
    * @param {Object} data Data about table car.
    * @param {Array<Object>} data.results Array car.
@@ -29,15 +38,17 @@ class TableCars {
     }
     this.tableBody = document.createElement('tbody');
     this.tableBody.classList.add('table-tableBody');
+
     const table = document.querySelector('table');
+
     data.results.forEach(car => {
       const rowTable = new RowTable(car);
 
-      this.cars.push(rowTable.car);
       this.tableBody.appendChild(rowTable.createDomRowTable());
     });
     table.appendChild(this.tableBody);
     if (this.tablePaginator) document.querySelector('.paginator').remove();
+
     this.tablePaginator = createPaginator(data.pagination);
     table.appendChild(this.tablePaginator);
   }
@@ -53,22 +64,33 @@ class TableCars {
 }
 
 /**
- * Run after load pages and load cars?page1.
+ * Create query to load Table with keyword search input.
  */
-const tableCars = new TableCars();
-const loaderTable = new Loader();
+function searchInTable() {
+  const paramsUrl = Url.split(/[&?]/);
 
-function onLoad() {
-  tableCars.createTable();
-  TableCars.loadTable(URL, tableCars);
   const search = document.querySelector('.search-input');
-  const button = document.querySelector('.search-submit');
-  button.addEventListener('click', searchInTable);
+
+  if (!Url.includes('?')) Url += `?keyword=${search.value}`;
+  else
+    Url =
+      paramsUrl[0] +
+      '?' +
+      paramsUrl.filter(param => param.includes('order')).join('&') +
+      `&keyword=${search.value}`;
+  TableCars.loadTable(Url);
 }
 
-function searchInTable() {
-  let paramsUrl = URL.split(/[&?]/);
-  const search = document.querySelector('.search-input');
-  URL = paramsUrl[0] + `?keyword=${search.value}` + paramsUrl.filter(param => param.includes('order')).join('&');
-  TableCars.loadTable(URL);
+const tableCars = new TableCars();
+
+/**
+ * Run after load pages and load cars?page1.
+ */
+function onLoad() {
+  tableCars.createTableHead();
+  TableCars.loadTable(Url, tableCars);
+
+  const button = document.querySelector('.search-submit');
+
+  button.addEventListener('click', searchInTable);
 }
