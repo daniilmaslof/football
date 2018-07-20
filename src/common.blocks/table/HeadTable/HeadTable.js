@@ -1,4 +1,5 @@
 const ArrayCarFieldTableHead = [];
+
 /**
  *Add static data Field Car Table.
  */
@@ -97,14 +98,14 @@ class HeadTable {
     if (this.sort_order === 'asc') this.sort_order = 'desc';
     else this.sort_order = 'asc';
 
-    const paramsUrl = Url.split(/[&?]/);
+    const Url = new URL(url);
 
-    Url =
-      paramsUrl[0] +
-      `?order_by=${columnName}&sort_order=${this.sort_order}` +
-      '&' +
-      paramsUrl.filter(param => param.includes('keyword')).join('');
-
+    Url.searchParams.delete('page');
+    Url.searchParams.delete('order_by');
+    Url.searchParams.delete('sort_order');
+    Url.searchParams.append('order_by', columnName);
+    Url.searchParams.append('sort_order', this.sort_order);
+    url = Url.toString();
     TableCars.loadTable(Url);
   }
 }

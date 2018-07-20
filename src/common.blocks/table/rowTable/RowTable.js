@@ -51,7 +51,7 @@ class RowTable {
     if (fieldsCarInColumn.edit) {
       const a = document.createElement('a');
 
-      a.href = `${this.car.id.value} `;
+      a.href = `?${this.car.id.value} `;
       a.appendChild(document.createTextNode(fieldsCarInColumn.parsingValue));
       cell.appendChild(a);
     } else cell.appendChild(document.createTextNode(fieldsCarInColumn.parsingValue));

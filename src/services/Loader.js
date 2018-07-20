@@ -20,6 +20,7 @@ class Loader {
       this.controller.abort();
       this.controller = null;
     }
+
     if ('AbortController' in window) {
       this.controller = new AbortController();
     }

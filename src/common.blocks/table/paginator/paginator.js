@@ -4,8 +4,12 @@
  * @param {number} numberPage Page Table cars.
  */
 function clickPaginatorLinks(numberPage) {
-  if (Url.includes('?')) Url += `&page=${Number(numberPage)}`;
-  else Url += `?page=${Number(numberPage)}`;
+  const Url = new URL(url);
+
+  Url.searchParams.delete('page');
+  Url.searchParams.append('page', numberPage);
+
+  url = Url.toString();
 
   TableCars.loadTable(Url);
 }

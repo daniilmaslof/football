@@ -22,5 +22,8 @@
     "stylelint": "^9.3.0",
     "stylelint-declaration-use-variable": "^1.6.1",
     "stylelint-no-unsupported-browser-features": "^3.0.0"
+  },
+  "dependencies": {
+    "@saritasa/stylelint-config-order": "0.0.3"
   }
 }

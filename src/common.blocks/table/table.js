@@ -1,4 +1,4 @@
-let Url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
+let url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
 const loaderTable = new Loader();
 
 /**
@@ -67,17 +67,16 @@ class TableCars {
  * Create query to load Table with keyword search input.
  */
 function searchInTable() {
-  const paramsUrl = Url.split(/[&?]/);
+  window.event.preventDefault();
 
   const search = document.querySelector('.search-input');
 
-  if (!Url.includes('?')) Url += `?keyword=${search.value}`;
-  else
-    Url =
-      paramsUrl[0] +
-      '?' +
-      paramsUrl.filter(param => param.includes('order')).join('&') +
-      `&keyword=${search.value}`;
+  const Url = new URL(url);
+
+  Url.searchParams.delete('page');
+  Url.searchParams.delete('keyword');
+  Url.searchParams.append('keyword', search.value);
+  url = Url.toString();
   TableCars.loadTable(Url);
 }
 
@@ -88,7 +87,7 @@ const tableCars = new TableCars();
  */
 function onLoad() {
   tableCars.createTableHead();
-  TableCars.loadTable(Url, tableCars);
+  TableCars.loadTable(url, tableCars);
 
   const button = document.querySelector('.search-submit');
 
