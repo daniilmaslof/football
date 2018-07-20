@@ -76,6 +76,7 @@ class HeadTable {
     } else {
       const buttonSort = document.createElement('button');
 
+      buttonSort.type = 'button';
       buttonSort.classList.add('button--fullSize');
       buttonSort.classList.add('button--sort');
       buttonSort.appendChild(document.createTextNode(columnField.fieldName));

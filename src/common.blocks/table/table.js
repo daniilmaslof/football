@@ -65,9 +65,11 @@ class TableCars {
 
 /**
  * Create query to load Table with keyword search input.
+ *
+ * @param {Object} event MouseEvent.
  */
-function searchInTable() {
-  window.event.preventDefault();
+function searchInTable(event) {
+  event.preventDefault();
 
   const search = document.querySelector('.search-input');
 
@@ -89,7 +91,7 @@ function onLoad() {
   tableCars.createTableHead();
   TableCars.loadTable(url, tableCars);
 
-  const button = document.querySelector('.search-submit');
+  const formSearch = document.querySelector('.form.search');
 
-  button.addEventListener('click', searchInTable);
+  formSearch.onsubmit = searchInTable;
 }

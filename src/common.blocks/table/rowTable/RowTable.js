@@ -20,13 +20,9 @@ class RowTable {
    * @returns {Object} Return Dom Row.
    */
   createDomRowTable() {
-    const sortedFieldsCarInColumn = Object.entries(this.car)
-      .filter(field => field[1].orderInHtml)
-      .sort(
-        (fieldPrevious, fieldCurrent) => fieldPrevious[1].orderInHtml > fieldCurrent[1].orderInHtml,
-      )
-      .map(fieldCar => fieldCar[1]);
-
+    const sortedFieldsCarInColumn = Object.values(this.car)
+      .filter(field => field.orderInHtml)
+      .sort((fieldPrevious, fieldCurrent) => fieldPrevious.orderInHtml > fieldCurrent.orderInHtml);
     this.rowDomElment.classList.add('table-tr');
     sortedFieldsCarInColumn.forEach(FieldsCarInColumn => {
       this.rowDomElment.appendChild(this.createCellTable(FieldsCarInColumn));

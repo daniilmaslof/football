@@ -29,6 +29,7 @@ function createPaginator(paginationData) {
   for (let i = 1; i <= paginationData.total_pages; i++) {
     const numberPage = document.createElement('button');
 
+    numberPage.type = 'button';
     if (paginationData.current_page === i) {
       numberPage.classList.add('active');
       numberPage.disabled = true;
@@ -42,9 +43,10 @@ function createPaginator(paginationData) {
     paginator.appendChild(numberPage);
   }
 
-  if (paginationData.links.next) {
-    const arrow = document.createElement('button');
+  const arrow = document.createElement('button');
 
+  arrow.type = 'button';
+  if (paginationData.links.next) {
     const numberPageNext = paginationData.links.next.slice(
       paginationData.links.next.indexOf('=') + 1,
       paginationData.links.next.length,
@@ -56,8 +58,6 @@ function createPaginator(paginationData) {
   }
 
   if (paginationData.links.previous) {
-    const arrow = document.createElement('button');
-
     const numberPagePrevious = paginationData.links.previous.slice(
       paginationData.links.previous.indexOf('=') + 1,
       paginationData.links.previous.length,
