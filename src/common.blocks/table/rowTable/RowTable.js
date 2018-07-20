@@ -4,6 +4,7 @@
 class RowTable {
   /**
    * Creates dom a row table and add Event click.
+   * Create object class Car by the data from the server.
    *
    * @param {Object} rowData Data without parsing.
    */
@@ -19,9 +20,13 @@ class RowTable {
    * @returns {Object} Return Dom Row.
    */
   createDomRowTable() {
-    let sortedFieldsCarInColumn = Object.entries(this.car).filter(field =>
-      field[1].orderInHtml).sort((fieldPrevious, fieldCurrent) =>
-      fieldPrevious[1].orderInHtml > fieldCurrent[1].orderInHtml).map(fieldCar => fieldCar[1]);
+    const sortedFieldsCarInColumn = Object.entries(this.car)
+      .filter(field => field[1].orderInHtml)
+      .sort(
+        (fieldPrevious, fieldCurrent) => fieldPrevious[1].orderInHtml > fieldCurrent[1].orderInHtml,
+      )
+      .map(fieldCar => fieldCar[1]);
+
     this.rowDomElment.classList.add('table-tr');
     sortedFieldsCarInColumn.forEach(FieldsCarInColumn => {
       this.rowDomElment.appendChild(this.createCellTable(FieldsCarInColumn));
@@ -33,9 +38,10 @@ class RowTable {
   /**
    * Create Dom Cell Table with text.
    *
-   * @param {string} cellText Text Cell.
-   * @param {string} classCell class Cell.
-   * @returns {Object} Cell Dom Cell Table.
+   * @param {FieldCarTable} fieldsCarInColumn Text Cell.
+   * @param {string} fieldsCarInColumn.classCellField Class Cell.
+   * @param {boolean} fieldsCarInColumn.edit Cells =to be links to edit page.
+   * @returns {Object} Cell Dom .
    */
   createCellTable(fieldsCarInColumn) {
     const cell = document.createElement('td');
@@ -43,7 +49,8 @@ class RowTable {
     if (fieldsCarInColumn.classCellField) cell.classList.add(fieldsCarInColumn.classCellField);
 
     if (fieldsCarInColumn.edit) {
-      let a = document.createElement('a');
+      const a = document.createElement('a');
+
       a.href = `${this.car.id.value} `;
       a.appendChild(document.createTextNode(fieldsCarInColumn.parsingValue));
       cell.appendChild(a);
@@ -59,5 +66,4 @@ class RowTable {
   click() {
     console.log(this.car.id);
   }
-
 }
