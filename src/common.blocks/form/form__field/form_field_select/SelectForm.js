@@ -1,10 +1,10 @@
 const DictMessagesByErrorCode = new Map();
 
 DictMessagesByErrorCode.set(503, {
-  model:
+  car_model_id:
     'data on the model information could not upload  please try again choose Machine manufacturer',
-  producer: 'data on the Machine manufacturer  could not upload  please reload page',
-  'body-types': 'data on the Body type could not upload  please reload page',
+  make_id: 'data on the Machine manufacturer  could not upload  please reload page',
+  body_type_id: 'data on the Body type could not upload  please reload page',
 });
 DictMessagesByErrorCode.set(20, 'Please wait response load');
 
@@ -15,11 +15,13 @@ class SelectForm {
   /**
    * Creates a selector and methods for creating its options and errors.
    *
-   * @description maybe add DI for loaderOptions.
+   * @description Maybe add DI for loaderOptions.
    * @param {string} selectId IdDomElement.
+   * @param {string} value Select  IdDomElement.
    */
-  constructor(selectId) {
+  constructor(selectId, value = 0) {
     this.selectId = selectId;
+    this.value = value;
     this.clearError = this.clearError.bind(this);
     this.createError = this.createError.bind(this);
     this.createOptions = this.createOptions.bind(this);
@@ -85,6 +87,17 @@ class SelectForm {
       select.options.add(option);
     });
     this.clearError();
+    if (this.value) select.value = this.value;
     select.disabled = false;
   }
 }
+
+
+
+
+
+
+
+
+
+

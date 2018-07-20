@@ -1,93 +1,93 @@
-const DictMessagesByErrorCode = new Map();
-
-DictMessagesByErrorCode.set(503, {
-  car_model_id:
-    'data on the model information could not upload  please try again choose Machine manufacturer',
-  make_id: 'data on the Machine manufacturer  could not upload  please reload page',
-  body_type_id: 'data on the Body type could not upload  please reload page',
-});
-DictMessagesByErrorCode.set(20, 'Please wait response load');
+const modelSelectCarForm = new SelectForm('car_model_id');
+/**
+ Maybe add DI for loaderOptions.
+ */
+const loaderOptionsModel = new Loader();
 
 /**
- * Creates a selector and methods for creating its options and errors.
+ * Run after change select producer.
+ *
+ * @param {number} idProducer Value select Producer.
  */
-class SelectForm {
-  /**
-   * Creates a selector and methods for creating its options and errors.
-   *
-   * @description Maybe add DI for loaderOptions.
-   * @param {string} selectId IdDomElement.
-   * @param {string} value Select  IdDomElement.
-   */
-  constructor(selectId, value = 0) {
-    this.selectId = selectId;
-    this.value = value;
-    this.clearError = this.clearError.bind(this);
-    this.createError = this.createError.bind(this);
-    this.createOptions = this.createOptions.bind(this);
-  }
+function loadModels(idProducer) {
+  loaderOptionsModel.loadDatabyFetch(
+    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
+    createCallback(modelSelectCarForm.createOptions, modelSelectCarForm.createError),
+  );
+}
 
-  /**
-   * Remove dom elements whith error message.
-   */
-  clearError() {
-    const error = document.getElementById(`error${this.selectId}`);
+/**
+ * Run after load pages and loads producer.
+ */
+function onLoad() {
+  const producerSelectCarForm = new SelectForm('make_id');
 
-    if (error) {
-      error.remove();
-    }
-  }
+  const loaderOptions = new Loader();
 
-  /**
-   * Create dom elements whith error message.
-   *
-   * @param {number} error Error code server.
-   */
-  createError(error) {
-    const select = document.getElementById(this.selectId);
+  const url = new URL(window.location.href);
 
-    select.disabled = true;
+  if (url.searchParams.get('id')) loadCar(url.searchParams.get('id'));
+  else
+    loaderOptions.loadDatabyFetch(
+      'https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
+      createCallback(producerSelectCarForm.createOptions, producerSelectCarForm.createError),
+    );
+}
 
-    let errorMessage = null;
+/**
+ * Load Car and run function createFormWithData on end load.
+ *
+ * @param {number} id  Id Car.
+ */
+function loadCar(id) {
+  const loaderCar = new Loader();
+  loaderCar.loadDatabyFetch(
+    `https://backend-jscamp.saritasa-hosting.com//api/cars/${parseInt(id, 10)}`,
+    createCallback(createFormWithData, createErrorCarDidNotLoad));
+}
 
-    const errorSelect = document.getElementById(`error${this.selectId}`);
+const linkSelects = {
+  make_id: () => `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes`,
+  car_model_id: id =>
+    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${id}/models`,
+  body_type_id: () => `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/body-types`,
+};
 
-    if (errorSelect && errorSelect.innerText !== errorMessage) {
-      this.clearError();
-    }
+/**
+ * Create Form with data about the car.
+ *
+ * @param {number} data  From api.
+ */
+function createFormWithData(data) {
+  const car = new Car(data);
+  const form = document.getElementById('createCarForm');
+  const formField = form.querySelectorAll('.form_field');
 
-    const errorDomElement = document.createElement('span');
+  [...formField].forEach(domElement => {
+    if (car[domElement.id].edit) {
+      const loaderOptions = new Loader();
+      const selectCarForm = new SelectForm(domElement.id, car[domElement.id].value);
 
-    if (error.code === 503) {
-      const errorsMessagesForAllSelects = DictMessagesByErrorCode.get(error.code);
+      loaderOptions.loadDatabyFetch(
+        linkSelects[domElement.id](car.make_id.value),
+        createCallback(selectCarForm.createOptions, selectCarForm.createError),
+      );
+    } else domElement.value = car[domElement.id].value;
+  });
+}
 
-      errorMessage = errorsMessagesForAllSelects[this.selectId];
-    } else errorMessage = `${error.message} ${DictMessagesByErrorCode.get(error.code)}`;
+/**
+ * Create Error with data about the car didn`t upload.
+ *
+ * @param {Error} error Error hat served as a didn`t upload  .
+ */
+function createErrorCarDidNotLoad(error) {
+  const form = document.getElementById('createCarForm');
+  const errorElement = document.createElement('span');
 
-    errorDomElement.id = `error${this.selectId}`;
-    errorDomElement.classList.add('error');
-    errorDomElement.innerText = errorMessage;
-    select.parentNode.appendChild(errorDomElement);
-  }
+  errorElement.appendChild(document.createTextNode(`car dont upload,please reload page${error}`));
 
-  /**
-   * Create dom elements(option) whith value = id and  text = name.
-   *
-   * @param {Array<objects>} options Array model from server.
-   */
-  createOptions(options) {
-    const select = document.getElementById(this.selectId);
-
-    [...select.options].forEach(option => option.remove());
-    options.results.forEach(optionData => {
-      const option = document.createElement('option');
-
-      option.value = optionData.id;
-      option.text = optionData.name;
-      select.options.add(option);
-    });
-    this.clearError();
-    if (this.value) select.value = this.value;
-    select.disabled = false;
-  }
+  errorElement.classList.add('error');
+  form.parentNode.appendChild(errorElement);
+  form.remove();
 }
