@@ -1,39 +1,3 @@
-const ArrayCarFieldTableHead = [];
-
-/**
- *Add static data Field Car Table.
- */
-ArrayCarFieldTableHead.push(new FieldCarTable('body_type', true, field => field.name, null, false));
-ArrayCarFieldTableHead.push(new FieldCarTable('make', true, field => field.name, null, false));
-ArrayCarFieldTableHead.push(new FieldCarTable('car_model', true, field => field.name, null, false));
-ArrayCarFieldTableHead.push(new FieldCarTable('id', false, field => field));
-ArrayCarFieldTableHead.push(new FieldCarTable('year', false, field => field));
-ArrayCarFieldTableHead.push(new FieldCarTable('mileage', false, field => field));
-ArrayCarFieldTableHead.push(
-  new FieldCarTable('description', false, field => field, 'table-td--description'),
-);
-ArrayCarFieldTableHead.push(
-  new FieldCarTable('created_at', false, field => moment(field).format('MM.DD, h:mm')),
-);
-ArrayCarFieldTableHead.push(
-  new FieldCarTable('updated_at', false, field => moment(field).format('MM.DD, h:mm')),
-);
-ArrayCarFieldTableHead.push(new FieldCarTable('body_type_id', false, field => field));
-ArrayCarFieldTableHead.push(new FieldCarTable('make_id', false, field => field));
-ArrayCarFieldTableHead.push(new FieldCarTable('car_model_id', false, field => field));
-ArrayCarFieldTableHead.push(new FieldCarTable('car_make', false, field => field));
-
-const CAR_TABLE_FIELDS = [
-  'make',
-  'car_model',
-  'body_type',
-  'year',
-  'mileage',
-  'description',
-  'created_at',
-  'updated_at',
-];
-
 /**
  *class HeadTable may create  car table head  is equal to the fields in the array Car Field in ArrayCarFieldTableHead.
  */
@@ -42,9 +6,6 @@ class HeadTable {
    * Creates  column head  by sorted fields by orderInHtml.
    */
   constructor() {
-    // this.sortedColumnNames = ArrayCarFieldTableHead.filter(field => field.orderInHtml).sort(
-    //   (fieldPrevious, fieldCurrent) => fieldPrevious.orderInHtml > fieldCurrent.orderInHtml,
-    // );
     this.sort_order = null;
   }
 
