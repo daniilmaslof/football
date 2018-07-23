@@ -32,12 +32,6 @@ function loadOptionInSelect(loader, selectId, idProducer = null) {
  */
 function loadModels(idProducer) {
   loadOptionInSelect(loaderOptionsModel, 'carModelId', idProducer);
-  // const modelSelectCarForm = new SelectForm('carModelId');
-  //
-  // loaderOptionsModel.loadDatabyFetch(
-  //   linkSelects[modelSelectCarForm.selectId](idProducer),
-  //   createCallback(modelSelectCarForm.createOptions, modelSelectCarForm.createError),
-  // );
 }
 
 /**
