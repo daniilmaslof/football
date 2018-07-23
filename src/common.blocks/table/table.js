@@ -93,5 +93,5 @@ function onLoad() {
 
   const formSearch = document.querySelector('.form.search');
 
-  formSearch.onsubmit = searchInTable;
+  formSearch.addEventListener('submit', searchInTable);
 }

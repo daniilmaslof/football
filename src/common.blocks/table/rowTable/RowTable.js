@@ -11,7 +11,6 @@ class RowTable {
   constructor(rowData) {
     this.car = new Car(rowData);
     this.rowDomElment = document.createElement('tr');
-    this.rowDomElment.addEventListener('click', this.click.bind(this));
   }
 
   /**
@@ -20,13 +19,14 @@ class RowTable {
    * @returns {Object} Return Dom Row.
    */
   createDomRowTable() {
-    const sortedFieldsCarInColumn = Object.values(this.car)
-      .filter(field => field.orderInHtml)
-      .sort((fieldPrevious, fieldCurrent) => fieldPrevious.orderInHtml > fieldCurrent.orderInHtml);
     this.rowDomElment.classList.add('table-tr');
-    sortedFieldsCarInColumn.forEach(FieldsCarInColumn => {
-      this.rowDomElment.appendChild(this.createCellTable(FieldsCarInColumn));
+    CAR_TABLE_FIELDS.forEach(field => {
+      this.rowDomElment.appendChild(this.createCellTable(this.car[field]));
     });
+
+    // sortedFieldsCarInColumn.forEach(FieldsCarInColumn => {
+    //   this.rowDomElment.appendChild(this.createCellTable(FieldsCarInColumn));
+    // });
 
     return this.rowDomElment;
   }
@@ -53,13 +53,5 @@ class RowTable {
     } else cell.appendChild(document.createTextNode(fieldsCarInColumn.parsingValue));
 
     return cell;
-  }
-
-  /**
-   * Function callback Event Click row.
-   *
-   */
-  click() {
-    console.log(this.car.id);
   }
 }
