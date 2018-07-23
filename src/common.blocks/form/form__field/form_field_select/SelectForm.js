@@ -1,10 +1,10 @@
 const DictMessagesByErrorCode = new Map();
 
 DictMessagesByErrorCode.set(503, {
-  car_model_id:
+  carModelId:
     'data on the model information could not upload  please try again choose Machine manufacturer',
-  make_id: 'data on the Machine manufacturer  could not upload  please reload page',
-  body_type_id: 'data on the Body type could not upload  please reload page',
+  makeId: 'data on the Machine manufacturer  could not upload  please reload page',
+  bodyTypeId: 'data on the Body type could not upload  please reload page',
 });
 DictMessagesByErrorCode.set(20, 'Please wait response load');
 
