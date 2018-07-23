@@ -14,17 +14,17 @@
     <form id="createCarForm" class="form" onsubmit="AJAXSubmit(this); return false" method="post" name="createFormCar">
         <p class="form_field">
             <label for="producer">Machine manufacturer</label>
-            <select disabled class="form_field_select" id="producer" onchange="loadModels(this.value)" name="producer">
+            <select disabled class="form_field_select" id="producer" onchange="loadModels(this.value)" name="make_id">
             </select>
         </p>
         <p class="form_field">
             <label for="model">Model auto</label>
-            <select disabled class="form_field_select" id="model" name="model">
+            <select disabled class="form_field_select" id="model" name="car_model_id">
             </select>
         </p>
         <p class="form_field">
             <label for="body">Body type</label>
-            <select class="form_field_select" id="body" name="body"></select>
+            <select class="form_field_select" id="body" name="body_type_id"></select>
         </p>
         <p class="form_field">
             <label for="year">Year</label>
