@@ -1,8 +1,29 @@
-const modelSelectCarForm = new SelectForm('car_model_id');
+const linkSelects = {
+  makeId: () => `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes`,
+  carModelId: id =>
+    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${id}/models`,
+  bodyTypeId: () => `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/body-types`,
+};
 /**
- Maybe add DI for loaderOptions.
+ Maybe add DI for loader.
  */
 const loaderOptionsModel = new Loader();
+
+/**
+ * Create SelectForm(idSelect) and load option there.
+ *
+ * @param {Loader} loader For download options for a particular select.
+ * @param {string} selectId Dom id select.
+ * @param {number} idProducer Value select Producer.
+ */
+function loadOptionInSelect(loader, selectId, idProducer = null) {
+  const selectCarForm = new SelectForm(selectId);
+
+  loader.loadDatabyFetch(
+    linkSelects[selectCarForm.selectId](idProducer),
+    createCallback(selectCarForm.createOptions, selectCarForm.createError),
+  );
+}
 
 /**
  * Run after change select producer.
@@ -10,28 +31,31 @@ const loaderOptionsModel = new Loader();
  * @param {number} idProducer Value select Producer.
  */
 function loadModels(idProducer) {
-  loaderOptionsModel.loadDatabyFetch(
-    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idProducer}/models`,
-    createCallback(modelSelectCarForm.createOptions, modelSelectCarForm.createError),
-  );
+  loadOptionInSelect(loaderOptionsModel, 'carModelId', idProducer);
+  // const modelSelectCarForm = new SelectForm('carModelId');
+  //
+  // loaderOptionsModel.loadDatabyFetch(
+  //   linkSelects[modelSelectCarForm.selectId](idProducer),
+  //   createCallback(modelSelectCarForm.createOptions, modelSelectCarForm.createError),
+  // );
 }
 
 /**
  * Run after load pages and loads producer.
  */
 function onLoad() {
-  const producerSelectCarForm = new SelectForm('make_id');
+  const loaderOptionsBody = new Loader();
 
-  const loaderOptions = new Loader();
+  const loaderOptionsMake = new Loader();
 
   const url = new URL(window.location.href);
 
-  if (url.searchParams.get('id')) loadCar(url.searchParams.get('id'));
-  else
-    loaderOptions.loadDatabyFetch(
-      'https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes',
-      createCallback(producerSelectCarForm.createOptions, producerSelectCarForm.createError),
-    );
+  if (url.searchParams.get('id')) {
+    loadCar(url.searchParams.get('id'));
+  } else {
+    loadOptionInSelect(loaderOptionsMake, 'makeId');
+    loadOptionInSelect(loaderOptionsBody, 'bodyTypeId');
+  }
 }
 
 /**
@@ -43,15 +67,9 @@ function loadCar(id) {
   const loaderCar = new Loader();
   loaderCar.loadDatabyFetch(
     `https://backend-jscamp.saritasa-hosting.com//api/cars/${parseInt(id, 10)}`,
-    createCallback(createFormWithData, createErrorCarDidNotLoad));
+    createCallback(createFormWithData, createErrorCarDidNotLoad),
+  );
 }
-
-const linkSelects = {
-  make_id: () => `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes`,
-  car_model_id: id =>
-    `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${id}/models`,
-  body_type_id: () => `https://backend-jscamp.saritasa-hosting.com/api/dictionaries/body-types`,
-};
 
 /**
  * Create Form with data about the car.
@@ -61,18 +79,20 @@ const linkSelects = {
 function createFormWithData(data) {
   const car = new Car(data);
   const form = document.getElementById('createCarForm');
-  const formField = form.querySelectorAll('.form_field');
+  const formFieldsDom = form.querySelectorAll('.form-field');
 
-  [...formField].forEach(domElement => {
-    if (car[domElement.name].edit) {
+  [...formFieldsDom].forEach(domField => {
+    if (car[domField.name].edit) {
       const loaderOptions = new Loader();
-      const selectCarForm = new SelectForm(domElement.name, car[domElement.name].value);
+      const selectCarForm = new SelectForm(domField.id, car[domField.name].value);
 
       loaderOptions.loadDatabyFetch(
-        linkSelects[domElement.name](car.make_id.value),
+        linkSelects[domField.name](car.makeId.value),
         createCallback(selectCarForm.createOptions, selectCarForm.createError),
       );
-    } else domElement.value = car[domElement.id].value;
+    } else {
+      domField.value = car[domField.name].value;
+    }
   });
 }
 
@@ -85,9 +105,8 @@ function createErrorCarDidNotLoad(error) {
   const form = document.getElementById('createCarForm');
   const errorElement = document.createElement('span');
 
-  errorElement.appendChild(document.createTextNode(`car dont upload,please reload page${error}`));
+  errorElement.appendChild(document.createTextNode(`car dont upload,please reload page. ${error}`));
 
   errorElement.classList.add('error');
-  form.parentNode.appendChild(errorElement);
-  form.remove();
+  form.appendChild(errorElement);
 }
