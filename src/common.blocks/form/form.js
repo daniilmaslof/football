@@ -64,12 +64,12 @@ function createFormWithData(data) {
   const formField = form.querySelectorAll('.form_field');
 
   [...formField].forEach(domElement => {
-    if (car[domElement.id].edit) {
+    if (car[domElement.name].edit) {
       const loaderOptions = new Loader();
-      const selectCarForm = new SelectForm(domElement.id, car[domElement.id].value);
+      const selectCarForm = new SelectForm(domElement.name, car[domElement.name].value);
 
       loaderOptions.loadDatabyFetch(
-        linkSelects[domElement.id](car.make_id.value),
+        linkSelects[domElement.name](car.make_id.value),
         createCallback(selectCarForm.createOptions, selectCarForm.createError),
       );
     } else domElement.value = car[domElement.id].value;

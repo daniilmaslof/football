@@ -91,13 +91,3 @@ class SelectForm {
     select.disabled = false;
   }
 }
-
-
-
-
-
-
-
-
-
-
