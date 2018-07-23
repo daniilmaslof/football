@@ -1,3 +1,14 @@
+const CAR_TABLE_FIELDS = [
+  'make',
+  'carModel',
+  'bodyType',
+  'year',
+  'mileage',
+  'description',
+  'createdAt',
+  'updatedAt',
+];
+
 /**
  * Car create car with  fields Class FieldCarTable.
  */
@@ -17,11 +28,11 @@ class Car {
    */
   createFieldsCar(carObject) {
     Object.keys(carObject).forEach(fieldName => {
-      const field = ArrayCarFieldTableHead.find(fieldColomn => fieldColomn.fieldName === fieldName);
+      const fieldCar = ArrayCarFieldTableHead.find(field => field.fieldNameServer === fieldName);
 
-      if (field) {
-        field.setDynamicData(carObject[fieldName]);
-        this[fieldName] = field;
+      if (fieldCar) {
+        fieldCar.setDynamicData(carObject[fieldName]);
+        this[fieldCar.fieldName] = fieldCar;
       } else this[fieldName] = carObject[fieldName];
 
       return null;
