@@ -29,12 +29,12 @@ class Loader {
 
       signalController = this.controller.signal;
     }
-    fetch('https://backend-jscamp.saritasa-hosting.com/api/auth', {
+    fetch(url, {
       signal: signalController,
       method: 'post',
       headers: {
         'Content-type': 'application/json',
-        Authorization: `Token ${window.localStorage.getItem('token')}`,
+        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
       },
       body: JSON.stringify(data),
     })

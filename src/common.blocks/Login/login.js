@@ -3,7 +3,6 @@ const DictMessagesByErrorCode = new Map();
 
 DictMessagesByErrorCode.set(503, 'please repeat request');
 DictMessagesByErrorCode.set(404, 'Incorrect login or password');
-DictMessagesByErrorCode.set(20, 'Please wait response load');
 
 /**
  * Create dom span with error.
@@ -23,9 +22,13 @@ function createError(error) {
 
   currentErrorElement.classList.add('error');
   currentErrorElement.id = 'error';
-  currentErrorElement.appendChild(
-    document.createTextNode(`error: \n\r ${DictMessagesByErrorCode.get(error.code)}`),
-  );
+  if (DictMessagesByErrorCode.get(error.code)) {
+    currentErrorElement.appendChild(
+      document.createTextNode(`error: \n\r ${DictMessagesByErrorCode.get(error.code)}`),
+    );
+  } else {
+    currentErrorElement.appendChild(document.createTextNode(error.message));
+  }
 
   const form = document.getElementById('loginForm');
 
