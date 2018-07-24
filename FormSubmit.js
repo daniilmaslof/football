@@ -84,7 +84,7 @@ class LoaderOptions {
       ) {
         const result = JSON.parse(this.request.responseText).results;
 
-        eventEmitter.emit('onreadystatechangeOption', {selectId: this.select, options: result});
+        eventEmitter.emit('onreadystatechangeOption', { selectId: this.select, options: result });
       } else {
         eventEmitter.emit('onreadystatechangeError', {
           selectId: this.select,
@@ -124,7 +124,7 @@ DictErrorMessages.set('body-types', 'data on the Body type could not upload  ple
  * @param {string} selectId IdDomElement.
  * @param {number} errorMessage Error code server.
  */
-function createError({selectId, errorMessage}) {
+function createError({ selectId, errorMessage }) {
   const form = document.getElementById('createCarForm');
   const select = document.getElementById(selectId);
 
@@ -143,7 +143,7 @@ function createError({selectId, errorMessage}) {
  * @param {string} selectId IdDomElement.
  * @param {Array<objects>} results Array model from server.
  */
-function createOptions({selectId, options}) {
+function createOptions({ selectId, options }) {
   const select = document.getElementById(selectId);
 
   [...select.options].forEach(option => option.remove());

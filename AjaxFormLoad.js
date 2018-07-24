@@ -31,7 +31,7 @@ class LoaderOptions {
        */
       success: data => {
         this.openXMLHttpRequest = false;
-        callbackAjax({selectId: this.select, options: data.results});
+        callbackAjax({ selectId: this.select, options: data.results });
       },
       /**
        * Call  reject a function with  xhr.status - HTTP status code.
@@ -40,7 +40,7 @@ class LoaderOptions {
        */
       error: xhr => {
         this.openXMLHttpRequest = false;
-        callbackAjax(null, {selectId: this.select, errorMessage: xhr.status});
+        callbackAjax(null, { selectId: this.select, errorMessage: xhr.status });
       },
       beforeSend: xhr => {
         if (this.openXMLHttpRequest) {

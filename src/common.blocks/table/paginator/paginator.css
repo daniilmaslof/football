@@ -1,0 +1,77 @@
+
+.paginator {
+  display: flex;
+
+}
+
+.paginator-page {
+  flex-basis: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 3px 0 0;
+  border-radius: 3px;
+  background: #fff;
+  color: #aaa;
+  border: 1px solid #0079c1;
+  cursor: pointer;
+}
+
+.paginator-page:hover {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.paginator-page.active {
+  color: #fff;
+  background: #6cf;
+}
+
+.paginator-arrow {
+  cursor: pointer;
+  position: relative;
+  flex-basis: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 3px 0 0;
+  border-radius: 3px;
+  border: 1px solid #0079c1;
+  z-index: 1;
+}
+
+.paginator-arrow:hover {
+  color: #333;
+  background-color: #f2f2f2;
+}
+
+.paginator-arrow:before, .paginator-arrow:after {
+  content: "";
+  position: absolute;
+  width: 35%;
+  height: 10%;
+  top: 41%;
+  left: 55%;
+  background: #aaa;
+  z-index: 2;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: all .2s linear;
+}
+
+.paginator-arrow:after {
+  z-index: 3;
+  top: 59%;
+  left: 55%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.paginator-arrow:after, .paginator-arrow:before {
+  color: #fff;
+}
+
+.paginator-arrow--rotate {
+  transform: rotate(180deg);
+}
+
