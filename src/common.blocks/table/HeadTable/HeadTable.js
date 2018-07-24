@@ -52,7 +52,7 @@ class HeadTable {
       buttonSort.appendChild(document.createTextNode(columnField.fieldName));
       buttonSort.addEventListener(
         'click',
-        this.sortTableByColumn.bind(this, columnField.fieldName),
+        this.sortTableByColumn.bind(this, columnField.fieldNameServer),
       );
       columnCellDom.appendChild(buttonSort);
     }

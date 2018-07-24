@@ -24,10 +24,6 @@ class RowTable {
       this.rowDomElment.appendChild(this.createCellTable(this.car[field]));
     });
 
-    // sortedFieldsCarInColumn.forEach(FieldsCarInColumn => {
-    //   this.rowDomElment.appendChild(this.createCellTable(FieldsCarInColumn));
-    // });
-
     return this.rowDomElment;
   }
 
@@ -47,7 +43,7 @@ class RowTable {
     if (fieldsCarInColumn.edit) {
       const a = document.createElement('a');
 
-      a.href = `?${this.car.id.value} `;
+      a.href = `../form/form.html?id=${this.car.id.value}`;
       a.appendChild(document.createTextNode(fieldsCarInColumn.parsingValue));
       cell.appendChild(a);
     } else cell.appendChild(document.createTextNode(fieldsCarInColumn.parsingValue));
