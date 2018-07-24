@@ -1,0 +1,11 @@
+.form-field-container {
+  flex-direction: column;
+  display: flex;
+}
+
+.form {
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
+  display: flex;
+}

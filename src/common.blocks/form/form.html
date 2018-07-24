@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+    <link rel="stylesheet" href="form.css">
+    <script src="../model/FieldCarTable.js"></script>
+    <script src="../model/Car.js"></script>
+    <script src="../../services/Loader.js"></script>
+    <script src="form__field/form_field_select/SelectForm.js"></script>
+    <script src="form.js"></script>
+    <link rel="stylesheet" href="form__field/form_field_select/SelectForm.css">
+<body onload="onLoad()">
+<main>
+    <form id="createCarForm" class="form" onsubmit="AJAXSubmit(this); return false" method="post" name="createFormCar">
+        <p class="form-field-container">
+            <label for="makeId">Machine manufacturer</label>
+            <select disabled class="form-field form-field-select" id="makeId" onchange="loadModels(this.value)"
+                    name="makeId">
+            </select>
+        </p>
+        <p class="form-field-container">
+            <label for="carModelId">Model auto</label>
+            <select disabled class="form-field form-field-select" id="carModelId" name="carModelId">
+            </select>
+        </p>
+        <p class="form-field-container">
+            <label for="bodyTypeId">Body type</label>
+            <select class="form-field form-field-select" id="bodyTypeId" name="bodyTypeId"></select>
+        </p>
+        <p class="form-field-container">
+            <label for="year">Year</label>
+            <input id="year" class="form-field" name="year" type="number" min="1990" max="2018"/>
+            <label for="mileage">Mileage number</label>
+            <input id="mileage" class="form-field" name="mileage" type="number" min="0"/>
+        </p>
+        <p class="form-field-container">
+            <label for="description">Description</label>
+            <textarea id="description" class="form-field" name="description" rows="3"></textarea>
+        </p>
+        <button type="submit"></button>
+    </form>
+</main>
+</body>
+</html>
