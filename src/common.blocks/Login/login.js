@@ -22,7 +22,7 @@ function createError(error) {
 
   currentErrorElement.classList.add('error');
   currentErrorElement.id = 'error';
-  if (DictMessagesByErrorCode.get(error.code)) {
+  if (DictMessagesByErrorCode.has(error.code)) {
     currentErrorElement.appendChild(
       document.createTextNode(`error: \n\r ${DictMessagesByErrorCode.get(error.code)}`),
     );
