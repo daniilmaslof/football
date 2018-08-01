@@ -1,0 +1,28 @@
+<mat-form-field>
+
+  <input matInput placeholder="Search lessons" #inputFilter>
+
+</mat-form-field>
+<mat-spinner class="spinner" *ngIf="dataSource.loading$ | async"
+             color="primary"></mat-spinner>
+<mat-table #matSort class="lessons-table mat-elevation-z8" [dataSource]="dataSource"
+           matSort matSortDisableClear>
+
+  <ng-container *ngFor="let column of displayedColumns" matColumnDef="{{column}}">
+
+    <mat-header-cell *matHeaderCellDef mat-sort-header>{{column}}</mat-header-cell>
+
+    <mat-cell *matCellDef="let car">{{parseFieldCarForTable[column](car[column])}}</mat-cell>
+
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+</mat-table>
+<mat-paginator [length]="(dataSource.pagination$ | async)?.total"
+               [hidePageSize]="true"
+               [pageIndex]="(dataSource.pagination$ | async)?.currentPage"
+               [pageSize]="(dataSource.pagination$ | async)?.perPage" (page)="loadLessonsPage()">
+
+</mat-paginator>
