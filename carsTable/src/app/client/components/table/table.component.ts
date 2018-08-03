@@ -1,25 +1,30 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort} from '@angular/material';
-import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
-import {Observable} from 'rxjs/Rx';
+import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { PageEvent, Sort } from '@angular/material';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 
-import {CarsDatasourceService} from '../../../core/services/cars.datasource.service';
-import {CarsService} from '../../../core/services/cars.service';
+import { ParamsTableActions } from '../../../core/models/Car/params-table-actions';
+import { CarsDatasourceService } from '../../../core/services/cars.datasource.service';
+import { CarsService } from '../../../core/services/cars.service';
 
 /**
- necessary to break the component into components
+ * Component with table car.
  */
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent implements OnInit, AfterViewInit {
-  dataSource: CarsDatasourceService;
+export class TableComponent implements OnInit {
+  private dataSource: CarsDatasourceService;
+  private $actionsChangeTable: Subject<ParamsTableActions> = new Subject<ParamsTableActions>();
+  private carHttpParams: ParamsTableActions = new ParamsTableActions();
   /**
    * Need create component mat Column Def and put it there when adding a form.
    */
-  parseFieldCarForTable: Object = {
+  private parseFieldCarForCellTable: { [keyField: string]: Function } = {
     'id': field => field,
     'make': field => field.name,
     'carModel': field => field.name,
@@ -27,13 +32,13 @@ export class TableComponent implements OnInit, AfterViewInit {
     'year': field => field,
     'mileage': field => field,
     'description': field => field,
-    'created': field => field,
-    'updated': field => field,
+    'created': field => new DatePipe('en-US').transform(field, 'yyyy-dd-MM-hh'),
+    'updated': field => new DatePipe('en-US').transform(field, 'yyyy-dd-MM-hh'),
   };
   /**
    * matHeaderRowDef enumeration of column names that we want to display Table.
    */
-  displayedColumns: string[] = [
+  private displayedColumns: string[] = [
     'id',
     'make',
     'carModel',
@@ -44,58 +49,52 @@ export class TableComponent implements OnInit, AfterViewInit {
     'created',
     'updated',
   ];
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  @ViewChild(MatSort) sort: MatSort;
-
-  @ViewChild('inputFilter') inputFilter: ElementRef;
-
+  private searchField: FormControl;
+  /**
+   * The server from which data is received into the table.
+   */
   constructor(private carsService: CarsService) {
   }
 
   /**
-   * We give the server from which the data download is called,and cause loading of the table data.
+   * Create CarsDatasourceService which provides data to a table, who receives them at $actionsChangeTable emit change of carsService.
    */
-  ngOnInit(): void {
-    this.dataSource = new CarsDatasourceService(this.carsService);
-    this.dataSource.loadCars();
+  public ngOnInit(): void {
+    this.changeSearchInput();
+    this.dataSource = new CarsDatasourceService(this.carsService, this.$actionsChangeTable);
+    this.$actionsChangeTable.next(this.carHttpParams);
   }
 
   /**
-   * We give the server from which the data download is called,and cause loading of the table data.
+    When the user clicks the sort buttons,$actionsChangeTable emit carHttpParams with  sort changes data.
    */
-  ngAfterViewInit(): void {
-
-    /**
-     * Subscribe to changes sorting,and filtering ,and loading and redrawing the table if they occurred.
-     * need to add switchMap and merge observable into one.
-     */
-    this.sort.sortChange.subscribe(() => {
-      this.paginator.pageIndex = 0;
-      this.loadLessonsPage();
-    });
-
-    Observable.fromEvent(this.inputFilter.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(150),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-
-          this.loadLessonsPage();
-        })).subscribe();
+  public sortTableChange(eventSort: Sort): void {
+    this.carHttpParams.sortParams.sortOrder = eventSort.direction;
+    this.carHttpParams.sortParams.orderBy = eventSort.active;
+    this.$actionsChangeTable.next(this.carHttpParams);
   }
 
   /**
-   * This method is going to be called in response to multiple user actions pagination, sorting, filtering,
-   * and loadCars with data from pagination ,MatSort Table, and input.
+   When the user change page table,$actionsChangeTable emit carHttpParams with  page changes data.
    */
-  loadLessonsPage(): void {
-    this.dataSource.loadCars(
-      this.inputFilter.nativeElement.value,
-      this.paginator.pageIndex,
-      this.sort.active,
-      this.sort.direction,
+  public changePage(eventPageIndex: PageEvent): void {
+    this.carHttpParams.page = eventPageIndex.pageIndex;
+    this.$actionsChangeTable.next(this.carHttpParams);
+  }
+
+  /**
+   When the user change search field table,$actionsChangeTable emit carHttpParams with  search changes data.
+   */
+  public changeSearchInput(): void {
+    this.searchField = new FormControl();
+    this.searchField.valueChanges.pipe(
+      debounceTime(150),
+      distinctUntilChanged(),
+    ).subscribe(
+      (value: string) => {
+        this.carHttpParams.keyword = value;
+        this.$actionsChangeTable.next(this.carHttpParams);
+      },
     );
   }
 
