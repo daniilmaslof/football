@@ -1,26 +1,49 @@
-import {BodyType} from './bodyType';
-import {CarModel} from './carModel';
-import {Make} from './make';
-
+import { BodyType } from './body-type';
+import { CarModel } from './car-model';
+import { Make } from './make';
+/**
+ *  Car model displayed in the table.
+ */
 export class Car {
-
+  /**
+   * ID car.
+   */
   public id: number;
 
+  /**
+   * Year production car.
+   */
   public year: number;
-
+  /**
+   * Mileage car.
+   */
   public mileage: number;
-
+  /**
+   * Description car.
+   */
   public description: string;
 
+  /**
+   * Date of creation of information about  car.
+   */
   public created: Date;
 
+  /**
+   * Date  updated of information about  car.
+   */
   public updated: Date;
-
+  /**
+   * carModel car.
+   */
   public carModel: CarModel;
-
+  /**
+   * bodyType car.
+   */
   public bodyType: BodyType;
 
+  /**
+   * make car.
+   */
   public make: Make;
-
 
 }

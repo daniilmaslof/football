@@ -1,13 +1,15 @@
-import {CollectionViewer} from '@angular/cdk/collections';
-import {DataSource} from '@angular/cdk/table';
-import {Injectable} from '@angular/core';
-import {finalize} from 'rxjs/operators';
-import {BehaviorSubject, Observable} from 'rxjs/Rx';
+import { CollectionViewer } from '@angular/cdk/collections';
+import { DataSource } from '@angular/cdk/table';
+import { Injectable } from '@angular/core';
+import { finalize, retryWhen, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
 
-import {Car} from '../models/Car/car';
-import {Pagination} from '../models/Car/pagination';
+import { Car } from '../models/Car/car';
+import { Pagination } from '../models/Car/pagination';
+import { ParamsTableActions } from '../models/Car/params-table-actions';
 
-import {CarsService} from './cars.service';
+import { CarsService } from './cars.service';
 
 /**
  * Class custom Observable-based Angular CDK Data Source.
@@ -21,11 +23,36 @@ export class CarsDatasourceService implements DataSource<Car> {
   private paginationSubject = new BehaviorSubject<Pagination>(null);
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
+  /**
+   * Is the table loaded?.
+   */
   public loading$ = this.loadingSubject.asObservable();
+  /**
+   * provides pagination of the table?.
+   */
   public pagination$ = this.paginationSubject.asObservable();
 
-  constructor(private carsService: CarsService) {
-
+  /**
+   * In the constructor service which receives the data in the table requests data occurs after actionsChangeTable emits values.
+   *
+   * @param carsService Service that sends data to the table in our case CarsService.
+   * @param $actionsChangeTable -ParamsTableActions come whenever one of three events occurs(change Page, sort change , search).
+   */
+  constructor(private carsService: CarsService, $actionsChangeTable: Subject<ParamsTableActions>) {
+    $actionsChangeTable.pipe(
+      tap(() => this.loadingSubject.next(true)),
+      switchMap(value =>
+        this.carsService.getCars(value).pipe(
+          retryWhen(errors => {
+              return errors;
+            },
+          ),
+          finalize(() => this.loadingSubject.next(false)),
+        )),
+    ).subscribe(carsApi => {
+      this.carsSubject.next(carsApi.cars);
+      this.paginationSubject.next(carsApi.pagination);
+    });
   }
 
   /**
@@ -36,40 +63,18 @@ export class CarsDatasourceService implements DataSource<Car> {
    * @param collectionViewer provides an Observable that emits information about what data is being displayed
    * @return carsSubject  That subject (the carsSubject) is going to be emitting the values retrieved from the backend.
    */
-  connect(collectionViewer: CollectionViewer): Observable<Car[]> {
+  public connect(collectionViewer: CollectionViewer): Observable<Car[]> {
     console.log('Connecting data source');
     return this.carsSubject.asObservable();
   }
 
   /**
-   * This method is called once by the data table at component destruction time.
    * Complete any observables that we have created internally in this class.
+   * This method is called once by the data table at component destruction time.
    */
-  disconnect(collectionViewer: CollectionViewer): void {
+  public disconnect(collectionViewer: CollectionViewer): void {
     this.carsSubject.complete();
     this.loadingSubject.complete();
     this.paginationSubject.complete();
-  }
-
-/**
- * This method is going to be called in response to multiple user actions (pagination, sorting, filtering) to load a given data page.
- * @param filter - Data that the user entered to filter the table.
- * @param pageIndex Data about the table page.
- * @param fieldNameOrder Column name to sort.
- * @param sortOrder Parameter in which direction to sort.
- */
-loadCars(filter: string = null,
-         pageIndex: number = 0,
-         fieldNameOrder: string = null,
-         sortOrder: string = null): void {
-    this.loadingSubject.next(true);
-
-    this.carsService.getCars(filter, pageIndex, fieldNameOrder, sortOrder).pipe(
-      finalize(() => this.loadingSubject.next(false)))
-      .subscribe(carsApi => {
-        this.carsSubject.next(carsApi.cars);
-        this.paginationSubject.next(carsApi.pagination);
-      });
-
   }
 }

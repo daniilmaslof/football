@@ -1,9 +1,18 @@
+/**
+ * Make  car.
+ */
 export class Make {
+  /**
+   * ID make.
+   */
   public id: number;
+  /**
+   * Name make.
+   */
   public name: string;
 
-  constructor(id: number, name: string) {
-    this.id = id;
-    this.name = name;
+  constructor(make: { id: number, name: string }) {
+    this.id = make.id;
+    this.name = make.name;
   }
 }

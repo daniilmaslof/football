@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatButtonModule,
   MatInputModule, MatPaginatorIntl,
@@ -11,9 +11,11 @@ import {
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
+import {CarsMatPaginatorIntl} from './components/intl/cars-mat-paginator-intl';
 import {TableComponent} from './components/table/table.component';
-import {CarsMatPaginatorIntl} from './components/intl/carsMatPaginatorIntl.';
-
+/**
+ * Standard module.
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import {CarsMatPaginatorIntl} from './components/intl/carsMatPaginatorIntl.';
     MatSortModule,
     MatProgressSpinnerModule,
     MatInputModule,
+    ReactiveFormsModule,
   ],
   providers: [{provide: MatPaginatorIntl, useClass: CarsMatPaginatorIntl}],
   exports: [TableComponent],

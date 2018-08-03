@@ -1,10 +1,27 @@
-import {Links} from './links';
-
+/**
+ * Pagination  table car.
+ */
 export class Pagination {
-  total: number;
-  count: number;
-  perPage: number;
-  currentPage: number;
-  totalPages: number;
-  links: Links;
+
+  /**
+   * Total number item(cars) in the table.
+   */
+  public total: number;
+  /**
+   * Total amount available now on the page items(car) .
+   */
+  public count: number;
+  /**
+   * Total amount on the page items(car) .
+   */
+  public perPage: number;
+  /**
+   * Current page in the table.
+   */
+  public currentPage: number;
+  /**
+   * Total number of pages in the table.
+   */
+  public totalPages: number;
+
 }
