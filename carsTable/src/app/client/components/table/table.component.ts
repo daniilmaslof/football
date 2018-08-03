@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent, Sort } from '@angular/material';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { CarsService } from '../../../core/services/cars.service';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
   private dataSource: CarsDatasourceService;
   private $actionsChangeTable: Subject<ParamsTableActions> = new Subject<ParamsTableActions>();
   private carHttpParams: ParamsTableActions = new ParamsTableActions();
@@ -97,6 +97,13 @@ export class TableComponent implements OnInit {
         this.$actionsChangeTable.next(this.carHttpParams);
       },
     );
+  }
+
+  /**
+   Unsubscribe.
+   */
+  public ngOnDestroy(): void {
+    this.$actionsChangeTable.unsubscribe();
   }
 
 }
