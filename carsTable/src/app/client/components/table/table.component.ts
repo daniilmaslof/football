@@ -50,6 +50,7 @@ export class TableComponent implements OnInit {
     'updated',
   ];
   private searchField: FormControl;
+
   /**
    * The server from which data is received into the table.
    */
@@ -66,7 +67,7 @@ export class TableComponent implements OnInit {
   }
 
   /**
-    When the user clicks the sort buttons,$actionsChangeTable emit carHttpParams with  sort changes data.
+   When the user clicks the sort buttons,$actionsChangeTable emit carHttpParams with  sort changes data.
    */
   public sortTableChange(eventSort: Sort): void {
     this.carHttpParams.sortParams.sortOrder = eventSort.direction;
@@ -78,7 +79,7 @@ export class TableComponent implements OnInit {
    When the user change page table,$actionsChangeTable emit carHttpParams with  page changes data.
    */
   public changePage(eventPageIndex: PageEvent): void {
-    this.carHttpParams.page = eventPageIndex.pageIndex;
+    this.carHttpParams.page = eventPageIndex.pageIndex + 1;
     this.$actionsChangeTable.next(this.carHttpParams);
   }
 
