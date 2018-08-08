@@ -1,8 +1,8 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent, Sort } from '@angular/material';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 
 import { ParamsTableActions } from '../../../core/models/Car/params-table-actions';
@@ -18,27 +18,17 @@ import { CarsService } from '../../../core/services/cars.service';
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit, OnDestroy {
-  private dataSource: CarsDatasourceService;
-  private $actionsChangeTable: Subject<ParamsTableActions> = new Subject<ParamsTableActions>();
-  private carHttpParams: ParamsTableActions = new ParamsTableActions();
   /**
-   * Need create component mat Column Def and put it there when adding a form.
+   * Object class that implements CDK Data Source, stores observable pagination,error,loading table.
    */
-  private parseFieldCarForCellTable: { [keyField: string]: Function } = {
-    'id': field => field,
-    'make': field => field.name,
-    'carModel': field => field.name,
-    'bodyType': field => field.name,
-    'year': field => field,
-    'mileage': field => field,
-    'description': field => field,
-    'created': field => new DatePipe('en-US').transform(field, 'yyyy-dd-MM-hh'),
-    'updated': field => new DatePipe('en-US').transform(field, 'yyyy-dd-MM-hh'),
-  };
+  public dataSource: CarsDatasourceService;
+  private $actionsChangeTable: BehaviorSubject<ParamsTableActions>;
+  private carHttpParams: ParamsTableActions;
+  private $ngUnsubscribe: Subject<void> = new Subject<void>();
   /**
    * matHeaderRowDef enumeration of column names that we want to display Table.
    */
-  private displayedColumns: string[] = [
+  public displayedColumns: string[] = [
     'id',
     'make',
     'carModel',
@@ -49,7 +39,10 @@ export class TableComponent implements OnInit, OnDestroy {
     'created',
     'updated',
   ];
-  private searchField: FormControl;
+  /**
+   * search Field to sort the table.
+   */
+  public searchField: FormControl;
 
   /**
    * The server from which data is received into the table.
@@ -61,15 +54,18 @@ export class TableComponent implements OnInit, OnDestroy {
    * Create CarsDatasourceService which provides data to a table, who receives them at $actionsChangeTable emit change of carsService.
    */
   public ngOnInit(): void {
-    this.changeSearchInput();
+    this.carHttpParams = new ParamsTableActions();
+    this.$actionsChangeTable = new BehaviorSubject<ParamsTableActions>(this.carHttpParams);
+    this.$actionsChangeTable.pipe(takeUntil(this.$ngUnsubscribe));
+    this.createSearchInput();
     this.dataSource = new CarsDatasourceService(this.carsService, this.$actionsChangeTable);
-    this.$actionsChangeTable.next(this.carHttpParams);
   }
 
   /**
    When the user clicks the sort buttons,$actionsChangeTable emit carHttpParams with  sort changes data.
    */
   public sortTableChange(eventSort: Sort): void {
+    this.carHttpParams.page = 1;
     this.carHttpParams.sortParams.sortOrder = eventSort.direction;
     this.carHttpParams.sortParams.orderBy = eventSort.active;
     this.$actionsChangeTable.next(this.carHttpParams);
@@ -86,13 +82,15 @@ export class TableComponent implements OnInit, OnDestroy {
   /**
    When the user change search field table,$actionsChangeTable emit carHttpParams with  search changes data.
    */
-  public changeSearchInput(): void {
+  public createSearchInput(): void {
     this.searchField = new FormControl();
     this.searchField.valueChanges.pipe(
+      takeUntil(this.$ngUnsubscribe),
       debounceTime(150),
       distinctUntilChanged(),
     ).subscribe(
       (value: string) => {
+        this.carHttpParams.page = 1;
         this.carHttpParams.keyword = value;
         this.$actionsChangeTable.next(this.carHttpParams);
       },
@@ -103,7 +101,7 @@ export class TableComponent implements OnInit, OnDestroy {
    Unsubscribe.
    */
   public ngOnDestroy(): void {
-    this.$actionsChangeTable.unsubscribe();
+    this.$ngUnsubscribe.next();
+    this.$ngUnsubscribe.complete();
   }
-
 }

@@ -1,15 +1,15 @@
+import { DatePipe } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { BodyType } from '../models/Car/body-type';
 import { Car } from '../models/Car/car';
 import { CarModel } from '../models/Car/car-model';
-
 import { Make } from '../models/Car/make';
 import { Pagination } from '../models/Car/pagination';
 import { ParamsTableActions } from '../models/Car/params-table-actions';
 
-import { ICarDto, IPaginationApiDto } from './dto-cars';
+import { ICarDto, ICarPostDto, IPaginationApiDto } from './dto-cars';
 
 /**
  * Class stores parsing functions that converts data from the server to classes client.
@@ -49,15 +49,37 @@ export class MapperCarsService {
     const car = new Car();
     car.id = carFromApi.id;
     car.make = new Make(carFromApi.make);
-    car.carModel = new CarModel(carFromApi.car_model.id, carFromApi.car_model.name, carFromApi.car_model.make_id);
+    car.model = new CarModel(carFromApi.car_model.id, carFromApi.car_model.name, carFromApi.car_model.make_id);
     car.bodyType = new BodyType(carFromApi.body_type.id, carFromApi.body_type.name);
     car.mileage = carFromApi.mileage;
     car.description = carFromApi.description;
     car.year = carFromApi.year;
     car.created = new Date(carFromApi.created_at);
     car.updated = new Date(carFromApi.updated_at);
-
     return car;
+  }
+
+  /**
+   * Parse to ICarDto from car.
+   *
+   * @param car derived from the code.
+   * @return car that we can send to the server.
+   */
+  public parseCartoCarDto(car: Car): ICarPostDto {
+    const carPostDto = {} as ICarPostDto;
+    if (car.id) {
+      carPostDto.id = car.id;
+    }
+    carPostDto.make_id = car.make.id;
+    carPostDto.body_type_id = car.bodyType.id;
+    carPostDto.car_model_id = car.model.id;
+    carPostDto.mileage = car.mileage;
+    carPostDto.description = car.description;
+    carPostDto.year = car.year;
+    carPostDto.created_at = new DatePipe('en-US').transform(car.created, 'yyyy-mm-dd hh:mm:ss');
+    carPostDto.updated_at = new DatePipe('en-US').transform(car.updated, 'yyyy-mm-dd hh:mm:ss');
+    console.log(carPostDto);
+    return carPostDto;
   }
 
   /**
@@ -67,7 +89,7 @@ export class MapperCarsService {
    * @return params = Value params order_by which you need to send to the server.
    */
   public parseSortParamsToDtoParams(params: string): string {
-    const parserToValidSortParams: { [params: string]: string } = {
+    const dictValidSortParams: { [params: string]: string } = {
       'id': 'id',
       'make': 'make_id',
       'carModel': 'car_model_id',
@@ -78,7 +100,7 @@ export class MapperCarsService {
       'created': 'created_at',
       'updated': 'updated_at',
     };
-    return parserToValidSortParams[params];
+    return dictValidSortParams[params];
   }
 
   /**

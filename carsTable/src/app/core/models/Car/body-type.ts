@@ -3,14 +3,17 @@
  */
 export class BodyType {
   /**
-   * ID BodyType.
+   * ID Body-Type.
    */
   public id: number;
   /**
-   * Name BodyType.
+   * Name Body-Type.
    */
   public name: string;
-  constructor(id: number, name: string) {
+  /**
+   * Init Body-Type.
+   */
+  public constructor(id?: number, name?: string) {
     this.id = id;
     this.name = name;
   }

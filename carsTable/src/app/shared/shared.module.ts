@@ -12,9 +12,7 @@ import {
   MatTableModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-/**
- * Standard.
- */
+
 @NgModule({
   imports: [
     CommonModule,

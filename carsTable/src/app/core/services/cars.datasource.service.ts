@@ -1,7 +1,7 @@
 import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/table';
 import { Injectable } from '@angular/core';
-import { finalize, retryWhen, switchMap, tap } from 'rxjs/operators';
+import { catchError, finalize, map, retryWhen, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
@@ -13,46 +13,36 @@ import { CarsService } from './cars.service';
 
 /**
  * Class custom Observable-based Angular CDK Data Source.
- * We will not be using the built-in MatTableDataSource because it is use of a client-side data array.
+ * Will not be using the built-in MatTableDataSource because it is use of a client-side data array.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class CarsDatasourceService implements DataSource<Car> {
-  private carsSubject = new BehaviorSubject<Car[]>([]);
   private paginationSubject = new BehaviorSubject<Pagination>(null);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-
+  private errorSubject = new BehaviorSubject<Pagination>(null);
+  private loadingSubject = new BehaviorSubject<boolean>(true);
+  private $ngUnsubscribe: Subject<void> = new Subject<void>();
   /**
-   * Is the table loaded?.
+   * Observable emit at the table loading.
    */
   public loading$ = this.loadingSubject.asObservable();
   /**
-   * provides pagination of the table?.
+   * provides pagination of the table.
    */
   public pagination$ = this.paginationSubject.asObservable();
+  /**
+   * provides error on the table.
+   */
+  public error$ = this.errorSubject.asObservable();
 
   /**
    * In the constructor service which receives the data in the table requests data occurs after actionsChangeTable emits values.
    *
    * @param carsService Service that sends data to the table in our case CarsService.
-   * @param $actionsChangeTable -ParamsTableActions come whenever one of three events occurs(change Page, sort change , search).
+   * @param $actionsChangeTable ParamsTableActions come whenever one of three events occurs(change Page, sort change , search).
    */
-  constructor(private carsService: CarsService, $actionsChangeTable: Subject<ParamsTableActions>) {
-    $actionsChangeTable.pipe(
-      tap(() => this.loadingSubject.next(true)),
-      switchMap(value =>
-        this.carsService.getCars(value).pipe(
-          retryWhen(errors => {
-              return errors;
-            },
-          ),
-          finalize(() => this.loadingSubject.next(false)),
-        )),
-    ).subscribe(carsApi => {
-      this.carsSubject.next(carsApi.cars);
-      this.paginationSubject.next(carsApi.pagination);
-    });
+  constructor(private carsService: CarsService, private $actionsChangeTable: Subject<ParamsTableActions>) {
   }
 
   /**
@@ -61,11 +51,29 @@ export class CarsDatasourceService implements DataSource<Car> {
    * and the values of that observable contain the data that the Data Table needs to display.
    *
    * @param collectionViewer provides an Observable that emits information about what data is being displayed
-   * @return carsSubject  That subject (the carsSubject) is going to be emitting the values retrieved from the backend.
+   * @return observable carsService.getCars which is called when $actionsChangeTable emit events,
+   * Is going to be emitting the values in the table.
    */
   public connect(collectionViewer: CollectionViewer): Observable<Car[]> {
-    console.log('Connecting data source');
-    return this.carsSubject.asObservable();
+    return this.$actionsChangeTable.pipe(
+      takeUntil(this.$ngUnsubscribe),
+      tap(() => this.loadingSubject.next(true)),
+      switchMap(value => {
+        return this.carsService.getCars(value).pipe(
+          retryWhen(errors => {
+              return this.carsService.handledHttpErrorCars(errors);
+            },
+          ),
+          tap(tableCar => this.paginationSubject.next(tableCar.pagination)),
+          map(tableCar => tableCar.items),
+          catchError(error => {
+            this.errorSubject.next(error);
+            return Observable.of([]);
+          }),
+          finalize(() => this.loadingSubject.next(false)),
+        );
+      }),
+    );
   }
 
   /**
@@ -73,8 +81,9 @@ export class CarsDatasourceService implements DataSource<Car> {
    * This method is called once by the data table at component destruction time.
    */
   public disconnect(collectionViewer: CollectionViewer): void {
-    this.carsSubject.complete();
     this.loadingSubject.complete();
     this.paginationSubject.complete();
+    this.$ngUnsubscribe.next();
+    this.$ngUnsubscribe.complete();
   }
 }

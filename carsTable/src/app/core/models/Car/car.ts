@@ -1,6 +1,7 @@
 import { BodyType } from './body-type';
 import { CarModel } from './car-model';
 import { Make } from './make';
+
 /**
  *  Car model displayed in the table.
  */
@@ -35,7 +36,7 @@ export class Car {
   /**
    * carModel car.
    */
-  public carModel: CarModel;
+  public model: CarModel;
   /**
    * bodyType car.
    */
@@ -45,5 +46,12 @@ export class Car {
    * make car.
    */
   public make: Make;
-
+  /**
+   * Init car.
+   */
+  constructor() {
+    this.make = new Make({});
+    this.bodyType = new BodyType();
+    this.model = new CarModel();
+  }
 }

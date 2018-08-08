@@ -2,13 +2,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
+import { CarResolver } from './services/car.resolver';
 import { CarsDatasourceService } from './services/cars.datasource.service';
 import { CarsService } from './services/cars.service';
 import { MapperCarsService } from './services/mapper-cars.service';
-
-/**
- * Core module.
- */
 
 @NgModule({
   imports: [
@@ -16,7 +13,7 @@ import { MapperCarsService } from './services/mapper-cars.service';
     HttpClientModule,
   ],
   exports: [],
-  providers: [{ provide: CarsService, useClass: CarsService }, CarsDatasourceService, MapperCarsService],
+  providers: [CarResolver, CarsService , CarsDatasourceService, MapperCarsService],
   declarations: [],
 })
 

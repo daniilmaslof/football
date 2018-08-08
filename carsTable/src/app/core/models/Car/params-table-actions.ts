@@ -28,6 +28,6 @@ export class ParamsTableActions {
  * Sort Params.
  */
 export interface IsortParams {
-  orderBy: string;
-  sortOrder: string;
+  orderBy?: string;
+  sortOrder?: string;
 }

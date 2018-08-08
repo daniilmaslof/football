@@ -15,10 +15,20 @@ export class Pagination {
    * Total amount on the page items(car) .
    */
   public perPage: number;
+  private _currentPage: number;
   /**
-   * Current page in the table.
+   * Get current page in the table with indexing from one.
    */
-  public currentPage: number;
+  public get currentPage(): number {
+    return this._currentPage;
+  }
+  /**
+   * Set current page in the table with indexing from one.
+   */
+  public set currentPage(currentPage: number) {
+    this._currentPage = currentPage - 1;
+  }
+
   /**
    * Total number of pages in the table.
    */
