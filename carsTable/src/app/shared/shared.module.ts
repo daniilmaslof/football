@@ -7,9 +7,9 @@ import {
   MatButtonModule,
   MatInputModule,
   MatPaginatorModule,
-  MatProgressSpinnerModule,
+  MatProgressSpinnerModule, MatSidenavModule,
   MatSortModule,
-  MatTableModule,
+  MatTableModule, MatTabsModule, MatToolbarModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -24,10 +24,16 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     MatSortModule,
     MatProgressSpinnerModule,
     MatInputModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatTabsModule,
   ],
   declarations: [],
   exports: [
     FormsModule,
+    MatTabsModule,
+    MatSidenavModule,
+    MatToolbarModule,
   ],
 })
 export class SharedModule {

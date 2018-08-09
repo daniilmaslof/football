@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { concat, map, switchMap, take } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { concat, map, retryWhen, switchMap, take } from 'rxjs/operators';
 import { Observable } from 'rxjs/Rx';
 
 import { Car } from '../models/Car/car';
@@ -23,8 +24,9 @@ export class CarsService {
    *
    * @param httpClient standard Angular.
    * @param mapper Stores methods for conversion from and to DTO.
+   * @param router if error 401 redirect to login.
    */
-  constructor(private httpClient: HttpClient, private mapper: MapperCarsService) {
+  constructor(private httpClient: HttpClient, private mapper: MapperCarsService, private router: Router) {
 
   }
 
@@ -34,11 +36,11 @@ export class CarsService {
    * @param paramsTableActions -(pagination,sort,filter) cast to Http params.
    * @return Observable with ICarsApi(cars and pagination).
    */
-  public getCars(paramsTableActions: ParamsTableActions): Observable<TableCars> {
+  public getCars(paramsTableActions: ParamsTableActions): Observable<TableCars<Car>> {
     return this.httpClient.get<ICarDto[]>('https://backend-jscamp.saritasa-hosting.com/api/cars',
       { params: this.mapper.parseParamsActionTableToHttpParamsDto(paramsTableActions) }).pipe(
       map((data: any) => {
-        return <TableCars>{
+        return <TableCars<Car>>{
           items: data.results.map(car => this.mapper.parseToCar(car)),
           pagination: this.mapper.parseToPagination(data.pagination),
         };
@@ -64,10 +66,19 @@ export class CarsService {
    * @return Observable with Car with this id.
    */
   public postCar(car: Car): Observable<Car> {
-    return this.httpClient.post('https://backend-jscamp.saritasa-hosting.com/api/cars', this.mapper.parseCartoCarDto(car)).pipe(
+    let url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
+    if (localStorage.getItem('token')) {
+      url = 'https://backend-jscamp.saritasa-hosting.com/api/with-auth/cars';
+    }
+    return this.httpClient.post(url, this.mapper.parseCartoCarDto(car)).pipe(
       map((carDto: ICarDto) => {
         return this.mapper.parseToCar(carDto);
-      }));
+      }),
+    retryWhen(errors => {
+        return this.handledHttpErrorCars(errors);
+      },
+    ),
+    );
   }
 
   /**
@@ -77,23 +88,38 @@ export class CarsService {
    * @return Observable with Car you send.
    */
   public putCar(car: Car): Observable<Car> {
-    return this.httpClient.put(`https://backend-jscamp.saritasa-hosting.com/api/cars/${car.id}`, this.mapper.parseCartoCarDto(car)).pipe(
+    let url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
+    if (localStorage.getItem('token')) {
+      url = 'https://backend-jscamp.saritasa-hosting.com/api/with-auth/cars';
+    }
+    return this.httpClient.put(url + `/${car.id}`, this.mapper.parseCartoCarDto(car)).pipe(
       map((carDto: ICarDto) => {
         return this.mapper.parseToCar(carDto);
-      }));
+      }),
+      retryWhen(errors => {
+          return this.handledHttpErrorCars(errors);
+        },
+      ),
+    );
   }
 
   /**
-   * What to do if there are errors on http request.
+   * What to do if there are errors on http request, if error 401 redirect to login(is normal?).
+   * although jwt has lifetime and move this login in guard.
+   *
+   * Can I create a storage class observable operators for example this method to use somewhere?
    *
    * @param errors - observable containing http Error Response .
    * @return Observable with error if error could not be resolved.
    */
   public handledHttpErrorCars(errors: Observable<any>): Observable<any> {
     return errors.pipe(
-      switchMap(httpErrorResponse => {
+      switchMap((httpErrorResponse: HttpErrorResponse) => {
         if (httpErrorResponse.status === 503) {
           return Observable.of(true);
+        }
+        if (httpErrorResponse.status === 401) {
+          this.router.navigateByUrl('/login');
         }
         return Observable.throwError(`${httpErrorResponse.error.message}`);
       }),

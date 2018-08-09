@@ -20,9 +20,6 @@ import { ICarDto, ICarPostDto, IPaginationApiDto } from './dto-cars';
 })
 export class MapperCarsService {
 
-  constructor() {
-  }
-
   /**
    * Parse pagination of api.
    *

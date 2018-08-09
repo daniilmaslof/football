@@ -1,8 +1,10 @@
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [
-];
+import { AuthInterceptorService } from './core/services/auth-interceptor.service';
+
+const routes: Routes = [];
 
 @NgModule({
   imports: [
@@ -13,6 +15,11 @@ const routes: Routes = [
   exports: [
     RouterModule,
   ],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptorService,
+    multi: true,
+  }],
 })
 export class AppRoutingModule {
 }

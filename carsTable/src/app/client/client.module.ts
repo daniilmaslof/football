@@ -1,20 +1,23 @@
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  MatButtonModule, MatFormFieldModule,
+  MatButtonModule, MatDialogModule, MatFormFieldModule,
   MatInputModule, MatPaginatorIntl,
   MatPaginatorModule,
-  MatProgressSpinnerModule, MatSelectModule,
+  MatProgressSpinnerModule, MatSelectModule, MatSnackBarModule,
   MatSortModule,
   MatTableModule,
 } from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ClientRoutingModule } from './client-routing.module';
 import { FormCarComponent } from './components/form-car/form-car.component';
-import {TableComponent} from './components/table/table.component';
-import {CarsMatPaginatorIntl} from './intl/cars-mat-paginator-intl';
+import { TableComponent } from './components/table/table.component';
+import { CarsMatPaginatorIntl } from './intl/cars-mat-paginator-intl';
+import { LoginComponent } from './components/login/login.component';
+import { DialogDeactivationComponent } from './components/dialog-deactivation/dialog-deactivation.component';
+
 /**
  * Standard module.
  */
@@ -33,10 +36,13 @@ import {CarsMatPaginatorIntl} from './intl/cars-mat-paginator-intl';
     ClientRoutingModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
-  providers: [{provide: MatPaginatorIntl, useClass: CarsMatPaginatorIntl}],
+  providers: [{ provide: MatPaginatorIntl, useClass: CarsMatPaginatorIntl }],
   exports: [TableComponent],
-  declarations: [TableComponent, FormCarComponent],
+  declarations: [TableComponent, FormCarComponent, LoginComponent, DialogDeactivationComponent],
+  entryComponents: [DialogDeactivationComponent],
 })
 export class ClientModule {
 }

@@ -9,6 +9,7 @@ import {SharedModule} from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from './app.component';
 import {ClientModule} from './client/client.module';
+import { MatProgressBarModule, MatSidenavModule, MatTabsModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,9 @@ import {ClientModule} from './client/client.module';
     SharedModule,
     ClientModule,
     AppRoutingModule,
+    MatTabsModule,
+    MatSidenavModule,
+    MatProgressBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

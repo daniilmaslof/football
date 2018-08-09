@@ -21,25 +21,33 @@
     <mat-cell *matCellDef="let car">{{car.id}}</mat-cell>
 
   </ng-container>
+
   <ng-container matColumnDef="make">
 
     <mat-header-cell *matHeaderCellDef mat-sort-header>make</mat-header-cell>
 
-    <mat-cell *matCellDef="let car">{{car.make.name}}</mat-cell>
+    <mat-cell *matCellDef="let car">
+      <a [routerLink]="['/formCar']" [queryParams]="{id: car.id}">{{car.make.name}}</a>
+    </mat-cell>
 
   </ng-container>
+
   <ng-container matColumnDef="carModel">
 
     <mat-header-cell *matHeaderCellDef mat-sort-header>carModel</mat-header-cell>
 
-    <mat-cell *matCellDef="let car">{{car.model.name}}</mat-cell>
+    <mat-cell *matCellDef="let car">
+      <a [routerLink]="['/formCar']" [queryParams]="{id: car.id}">{{car.model.name}}</a>
+    </mat-cell>
 
   </ng-container>
   <ng-container matColumnDef="bodyType">
 
     <mat-header-cell *matHeaderCellDef mat-sort-header>bodyType</mat-header-cell>
 
-    <mat-cell *matCellDef="let car">{{car.bodyType.name}}</mat-cell>
+    <mat-cell *matCellDef="let car">
+      <a [routerLink]="['/formCar']" [queryParams]="{id: car.id}">{{car.bodyType.name}}</a>
+    </mat-cell>
 
   </ng-container>
   <ng-container matColumnDef="year">
