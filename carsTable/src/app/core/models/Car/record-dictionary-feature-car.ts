@@ -1,7 +1,7 @@
 /**
  *  element from dictionaries Make Body-Type  Model.
  */
-export class ElementDictionariesRelatedWithCar {
+export class RecordDictionaryFeatureCar {
   /**
    *  Name element.
    */

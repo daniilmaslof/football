@@ -42,7 +42,7 @@ import { DialogDeactivationComponent } from './components/dialog-deactivation/di
   providers: [{ provide: MatPaginatorIntl, useClass: CarsMatPaginatorIntl }],
   exports: [TableComponent],
   declarations: [TableComponent, FormCarComponent, LoginComponent, DialogDeactivationComponent],
-  entryComponents: [DialogDeactivationComponent],
+  entryComponents: [DialogDeactivationComponent, LoginComponent],
 })
 export class ClientModule {
 }

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { Car } from '../../../core/models/Car/car';
-import { ElementDictionariesRelatedWithCar } from '../../../core/models/Car/element-dictionaries-related-with-car';
+import { RecordDictionaryFeatureCar } from '../../../core/models/Car/record-dictionary-feature-car';
 import { CarsService } from '../../../core/services/cars.service';
 import { CanComponentDeactivate } from '../../../core/services/deactivate-form.guard';
 import { DictionaryCarsService } from '../../../core/services/dictionary-cars.service';
@@ -33,15 +33,15 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
   /**
    * Observable with  dictionary make.
    */
-  public make$: Observable<Array<ElementDictionariesRelatedWithCar>>;
+  public makes$: Observable<RecordDictionaryFeatureCar[]>;
   /**
    * Observable with  dictionary Body Type.
    */
-  public bodyType$: Observable<Array<ElementDictionariesRelatedWithCar>>;
+  public bodyTypes$: Observable<RecordDictionaryFeatureCar[]>;
   /**
    * Observable with  dictionary Model.
    */
-  public model$: Observable<Array<ElementDictionariesRelatedWithCar>>;
+  public models$: Observable<RecordDictionaryFeatureCar[]>;
   /**
    * error associated with the form.
    */
@@ -72,10 +72,10 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
     if (!this.error) {
       this.car = this.activatedRouter.snapshot.data.carResolver.car;
 
-      this.make$ = this.dictionaryCarsServise.getMake();
-      this.bodyType$ = this.dictionaryCarsServise.getBodyType();
+      this.makes$ = this.dictionaryCarsServise.getMakes();
+      this.bodyTypes$ = this.dictionaryCarsServise.getBodyTypes();
       if (this.car.make.id) {
-        this.model$ = this.dictionaryCarsServise.getModel(this.car.make.id);
+        this.models$ = this.dictionaryCarsServise.getModels(this.car.make.id);
       }
     }
   }
@@ -109,9 +109,9 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
   /**
    * When changing make start load dictionary models with selected make id.
    */
-  public changeSelectMake(changeMake: MatSelectChange): void {
+  public onChangeMake(changeMake: MatSelectChange): void {
     this.car.model.id = null;
-    this.model$ = this.dictionaryCarsServise.getModel(changeMake.value);
+    this.models$ = this.dictionaryCarsServise.getModels(changeMake.value);
   }
 
   /**
@@ -121,7 +121,7 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
     if (this.error) {
       return Observable.of(true);
     }
-    if (this.carForm.touched || this.carForm.submitted) {
+    if (this.carForm.touched && !this.isFormSubmitted) {
       const dialogDeactivate = this.dialog.open(DialogDeactivationComponent, {
         width: '400px',
         height: '350px',

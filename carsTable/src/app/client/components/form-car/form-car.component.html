@@ -4,11 +4,11 @@
   </mat-spinner>
 </ng-template>
 <form class="form" (ngSubmit)="onSubmit()" #carForm="ngForm"
-      *ngIf="!error && (make$| async) && (bodyType$| async);else loading ">
+      *ngIf="!error && (makes$| async) && (bodyTypes$| async);else loading ">
   <mat-form-field>
-    <mat-select [(ngModel)]="car.make.id" name="make" #make="ngModel" (selectionChange)="changeSelectMake($event)"
+    <mat-select [(ngModel)]="car.make.id" name="make" #make="ngModel" (selectionChange)="onChangeMake($event)"
                 required placeholder="Machine manufacturer">
-      <mat-option *ngFor="let make of  make$| async" [value]="make.id">
+      <mat-option *ngFor="let make of  makes$| async" [value]="make.id">
         {{make.name}}
       </mat-option>
     </mat-select>
@@ -20,7 +20,7 @@
   </mat-form-field>
   <mat-form-field>
     <mat-select [(ngModel)]="car.bodyType.id" #bodyType="ngModel" name="bodyType" required placeholder="body Type">
-      <mat-option *ngFor="let bodyType of  bodyType$| async" [value]="bodyType.id">
+      <mat-option *ngFor="let bodyType of  bodyTypes$| async" [value]="bodyType.id">
         {{bodyType.name}}
       </mat-option>
     </mat-select>
@@ -32,7 +32,7 @@
   </mat-form-field>
   <mat-form-field>
     <mat-select name="id" required placeholder="model" #model="ngModel" [(ngModel)]="car.model.id">
-      <mat-option *ngFor="let model of model$| async" [value]="model.id">
+      <mat-option *ngFor="let model of models$| async" [value]="model.id">
         {{model.name}}
       </mat-option>
     </mat-select>

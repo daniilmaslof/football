@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { concat, map, retryWhen, shareReplay, switchMap, take } from 'rxjs/operators';
 
-import { ElementDictionariesRelatedWithCar } from '../models/Car/element-dictionaries-related-with-car';
+import { RecordDictionaryFeatureCar } from '../models/Car/record-dictionary-feature-car';
 
 /**
  * Service communication with http server https://backend-jscamp.saritasa-hosting.com/api/dictionaries.
@@ -12,8 +12,8 @@ import { ElementDictionariesRelatedWithCar } from '../models/Car/element-diction
   providedIn: 'root',
 })
 export class DictionaryCarsService {
-  private cacheMake$: Observable<Array<ElementDictionariesRelatedWithCar>>;
-  private cacheBodyType$: Observable<Array<ElementDictionariesRelatedWithCar>>;
+  private cacheMake$: Observable<Array<RecordDictionaryFeatureCar>>;
+  private cacheBodyType$: Observable<Array<RecordDictionaryFeatureCar>>;
 
   /**
    * @param httpClient Servise with http communication.
@@ -27,10 +27,10 @@ export class DictionaryCarsService {
    *
    * @return Observable with  List Make(id,name).
    */
-  public getMake(): Observable<Array<ElementDictionariesRelatedWithCar>> {
+  public getMakes(): Observable<Array<RecordDictionaryFeatureCar>> {
     if (!this.cacheMake$) {
       this.cacheMake$ = this.httpClient
-        .get<Array<ElementDictionariesRelatedWithCar>>('https://backend-jscamp.saritasa-hosting.com//api/dictionaries/makes')
+        .get<Array<RecordDictionaryFeatureCar>>('https://backend-jscamp.saritasa-hosting.com//api/dictionaries/makes')
         .pipe(
           retryWhen(errors => {
               return this.handledHttpErrorDictionaryCar(errors);
@@ -50,10 +50,10 @@ export class DictionaryCarsService {
    *
    * @return Observable with  Body Type(id,name).
    */
-  public getBodyType(): Observable<Array<ElementDictionariesRelatedWithCar>> {
+  public getBodyTypes(): Observable<RecordDictionaryFeatureCar[]> {
     if (!this.cacheBodyType$) {
       this.cacheBodyType$ = this.httpClient
-        .get<Array<ElementDictionariesRelatedWithCar>>('https://backend-jscamp.saritasa-hosting.com//api/dictionaries/body-types')
+        .get<RecordDictionaryFeatureCar[]>('https://backend-jscamp.saritasa-hosting.com//api/dictionaries/body-types')
         .pipe(
           retryWhen(errors => {
               return this.handledHttpErrorDictionaryCar(errors);
@@ -73,9 +73,9 @@ export class DictionaryCarsService {
    * @param idMake loads the models of the given Make.
    * @return Observable with  Model(id,name).
    */
-  public getModel(idMake: number): Observable<Array<ElementDictionariesRelatedWithCar>> {
+  public getModels(idMake: number): Observable<RecordDictionaryFeatureCar[]> {
     return this.httpClient
-      .get<Array<ElementDictionariesRelatedWithCar>>(`https://backend-jscamp.saritasa-hosting.com//api/dictionaries/makes/${idMake}/models`)
+      .get<RecordDictionaryFeatureCar[]>(`https://backend-jscamp.saritasa-hosting.com//api/dictionaries/makes/${idMake}/models`)
       .pipe(
         map((response: any) => response.results),
         retryWhen(errors => {

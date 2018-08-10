@@ -1,6 +1,7 @@
 <nav class="mat-tab-nav-bar" mat-tab-nav-bar>
   <a class="link" *ngFor="let link of navLinks" mat-tab-link routerLinkActive #rla='routerLinkActive'
      [active]="rla.isActive" [routerLink]="[link.path]">{{link.label}}</a>
+  <button mat-raised-button color="primary" (click)="openLogin()" >Login</button>
 </nav>
 <mat-progress-bar
   *ngIf="loading" color="primary" mode="indeterminate">

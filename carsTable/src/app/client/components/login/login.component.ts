@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 
 import { LoginService } from '../../../core/services/login.service';
+import { MatDialogRef } from '@angular/material';
 
 /**
  * Component with login form.
@@ -35,8 +36,9 @@ export class LoginComponent implements OnInit {
   /**
    * @param router Router angular.
    * @param loginService Service for authorization.
+   * @param dialogRef The MatDialogRef provides a handle on the opened dialog.
    */
-  constructor(private router: Router, private loginService: LoginService) {
+  constructor(private router: Router, private loginService: LoginService, private dialogRef: MatDialogRef<LoginComponent>) {
   }
 
   /**
@@ -69,8 +71,12 @@ export class LoginComponent implements OnInit {
    */
   public login(): void {
     this.loginService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe(
-      () => this.router.navigate(['table']),
-      httpErrorResponse => this.error = `${httpErrorResponse.error} status server ${httpErrorResponse.status}`,
+      () => this.dialogRef.close(true),
+      httpErrorResponse => this.error = `${httpErrorResponse.error.message} status server ${httpErrorResponse.status}`,
     );
+  }
+
+  public notLogin(): void {
+    this.dialogRef.close();
   }
 }
