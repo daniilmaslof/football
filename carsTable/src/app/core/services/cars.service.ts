@@ -24,9 +24,8 @@ export class CarsService {
    *
    * @param httpClient standard Angular.
    * @param mapper Stores methods for conversion from and to DTO.
-   * @param router if error 401 redirect to login.
    */
-  constructor(private httpClient: HttpClient, private mapper: MapperCarsService, private router: Router) {
+  constructor(private httpClient: HttpClient, private mapper: MapperCarsService) {
 
   }
 
@@ -104,10 +103,7 @@ export class CarsService {
   }
 
   /**
-   * What to do if there are errors on http request, if error 401 redirect to login(is normal?).
-   * although jwt has lifetime and move this login in guard.
-   *
-   * Can I create a storage class observable operators for example this method to use somewhere?
+   * What to do if there are errors on http request.
    *
    * @param errors - observable containing http Error Response .
    * @return Observable with error if error could not be resolved.
@@ -117,9 +113,6 @@ export class CarsService {
       switchMap((httpErrorResponse: HttpErrorResponse) => {
         if (httpErrorResponse.status === 503) {
           return Observable.of(true);
-        }
-        if (httpErrorResponse.status === 401) {
-          this.router.navigateByUrl('/login');
         }
         return Observable.throwError(`${httpErrorResponse.error.message}`);
       }),
