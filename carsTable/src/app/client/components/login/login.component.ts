@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  public notLogin(): void {
+  public close(): void {
     this.dialogRef.close();
   }
 }
