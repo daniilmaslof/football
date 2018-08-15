@@ -1,13 +1,11 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, concat, retry, retryWhen, switchMap, take } from 'rxjs/operators';
 
 import { LoginComponent } from '../../client/components/login/login.component';
-
-import { LoginService } from './login.service';
 
 /**
  * Interceptor http request.
@@ -17,7 +15,7 @@ import { LoginService } from './login.service';
 })
 export class AuthInterceptorService implements HttpInterceptor {
 
-  public constructor(private router: Router, private matDialog: MatDialog, private loginService: LoginService) {
+  public constructor(private router: Router, private matDialog: MatDialog, private httpClient: HttpClient) {
 
   }
 
@@ -34,26 +32,49 @@ export class AuthInterceptorService implements HttpInterceptor {
       });
     }
     return next.handle(cloned).pipe(
-      catchError(err => {
-          if (err instanceof HttpErrorResponse) {
-            if (err.status === 401) {
-              this.loginService.saveFailedRequest(cloned);
-              const loginDialog = this.matDialog.open(LoginComponent, {
-                width: '400px',
-                height: '350px',
-              } as MatDialogConfig<any>);
-              return loginDialog.afterClosed().pipe(
-                switchMap(
-                  loggedOn => {
-                    if (loggedOn) {
-                      return this.loginService.retryFailedRequest();
-                    }
-                    return Observable.throwError(err);
-                  }));
-            }
-            return next.handle(cloned);
-          }
+      retryWhen(errors => {
+          return errors.pipe(
+            switchMap((httpErrorResponse: HttpErrorResponse) => {
+
+              if (httpErrorResponse.status === 503) {
+                return Observable.of(true);
+              }
+              return Observable.throwError(httpErrorResponse);
+            }),
+            take(5),
+            concat(Observable.throwError(`please wait, server error 503`)),
+          );
         },
-      ));
+      ),
+      catchError(err => {
+          return this.handleHttpErrorResponse(err, cloned);
+        },
+      ),
+    );
+  }
+
+  /**
+   * Handle http error.
+   *
+   * @param httpErrorResponse response with an error other than 503.
+   * @param requestWithError the request with which the error occurred.
+   * @return Observable with a handled error so far only 401.
+   */
+  public handleHttpErrorResponse(httpErrorResponse: HttpErrorResponse, requestWithError: HttpRequest<any>): Observable<any> {
+    if (httpErrorResponse.status === 401) {
+      const loginDialog = this.matDialog.open(LoginComponent, {
+        width: '400px',
+        height: '350px',
+      } as MatDialogConfig<any>);
+      return loginDialog.afterClosed().pipe(
+        switchMap(
+          loggedOn => {
+            if (loggedOn) {
+              return this.httpClient.request(requestWithError);
+            }
+            return Observable.throwError(httpErrorResponse);
+          }));
+    }
+    return Observable.throwError(httpErrorResponse);
   }
 }

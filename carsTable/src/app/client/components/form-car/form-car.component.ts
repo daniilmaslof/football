@@ -48,14 +48,14 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
   public error: String;
 
   /**
-   * @param activatedRouter Angular.
+   * @param activatedRoute Angular.
    * @param router Angular.
    * @param dictionaryCarsServise Service for obtaining dictionaries associated with car.
    * @param carsServise Service for sending cars.
    * @param dialog Material.
    * @param snackBar Material.
    */
-  constructor(private activatedRouter: ActivatedRoute,
+  constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private dictionaryCarsServise: DictionaryCarsService,
               private carsServise: CarsService,
@@ -68,9 +68,9 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
    * Receives a car from the resolver and loads dictionary.
    */
   public ngOnInit(): void {
-    this.error = this.activatedRouter.snapshot.data.carResolver.error;
+    this.error = this.activatedRoute.snapshot.data.carResolver.error;
     if (!this.error) {
-      this.car = this.activatedRouter.snapshot.data.carResolver.car;
+      this.car = this.activatedRoute.snapshot.data.carResolver.car;
 
       this.makes$ = this.dictionaryCarsServise.getMakes();
       this.bodyTypes$ = this.dictionaryCarsServise.getBodyTypes();
@@ -85,25 +85,19 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
    */
   public onSubmit(): void {
     this.isFormSubmitted = true;
-    if (this.car.id) {
-      this.car.updated = new Date();
-      this.carsServise.putCar(this.car).subscribe(
-        value => {
-          this.isFormSubmitted = true;
-          this.snackBar.open('the car is sent');
-        }, httpErrorResponse => this.error = `${httpErrorResponse.error} status server ${httpErrorResponse.status}`,
-      );
-    } else {
-      this.car.updated = new Date();
+    let method = 'put';
+    this.car.updated = new Date();
+    if (!this.car.id) {
       this.car.created = new Date();
-      this.carsServise.postCar(this.car).subscribe(
-        value => {
-          this.isFormSubmitted = true;
-          this.snackBar.open('the car is sent');
-        },
-        httpErrorResponse => this.error = `${httpErrorResponse.error} status server ${httpErrorResponse.status}`,
-      );
+      method = 'post';
     }
+    this.car.updated = new Date();
+    this.carsServise.saveCar(method, this.car).subscribe(
+      () => {
+        this.isFormSubmitted = true;
+        this.snackBar.open('the car is sent');
+      }, httpErrorResponse => this.error = `${httpErrorResponse.error} status server ${httpErrorResponse.status}`,
+    );
   }
 
   /**

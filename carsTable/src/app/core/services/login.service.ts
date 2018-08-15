@@ -10,25 +10,6 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class LoginService {
-  private cachedRequest: HttpRequest<any>;
-
-  /**
-   * Save request.
-   *
-   * @param request Http Request for which response  received with error 401.
-   */
-  public saveFailedRequest(request: HttpRequest<any>): void {
-    this.cachedRequest = request;
-  }
-
-  /**
-   * Retry cached request.
-   */
-  public retryFailedRequest(): Observable<any> {
-
-    return this.httpClient.request(this.cachedRequest);
-
-  }
 
   /**
    * @param httpClient standard angular http communication class.

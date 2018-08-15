@@ -59,65 +59,24 @@ export class CarsService {
   }
 
   /**
-   * Create http post query with  car.
+   * Create http  send query with  body = car.
    *
-   * @param car you want to send to API.
+   * @param car You want to send to API.
+   * @param method Name http method(put or post).
    * @return Observable with Car with this id.
    */
-  public postCar(car: Car): Observable<Car> {
+  public saveCar(method: string, car: Car): Observable<Car> {
     let url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
     if (localStorage.getItem('token')) {
       url = 'https://backend-jscamp.saritasa-hosting.com/api/with-auth/cars';
     }
-    return this.httpClient.post(url, this.mapper.parseCartoCarDto(car)).pipe(
-      map((carDto: ICarDto) => {
-        return this.mapper.parseToCar(carDto);
-      }),
-    retryWhen(errors => {
-        return this.handledHttpErrorCars(errors);
-      },
-    ),
-    );
-  }
-
-  /**
-   * Create http put query with car.
-   *
-   * @param car you want to send to API.
-   * @return Observable with Car you send.
-   */
-  public putCar(car: Car): Observable<Car> {
-    let url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
-    if (localStorage.getItem('token')) {
-      url = 'https://backend-jscamp.saritasa-hosting.com/api/with-auth/cars';
+    if (method === 'put') {
+      url = url + `/${car.id}`;
     }
-    return this.httpClient.put(url + `/${car.id}`, this.mapper.parseCartoCarDto(car)).pipe(
+    return this.httpClient.request(method, url, { body: this.mapper.parseCartoCarDto(car) }).pipe(
       map((carDto: ICarDto) => {
         return this.mapper.parseToCar(carDto);
       }),
-      retryWhen(errors => {
-          return this.handledHttpErrorCars(errors);
-        },
-      ),
-    );
-  }
-
-  /**
-   * What to do if there are errors on http request.
-   *
-   * @param errors - observable containing http Error Response .
-   * @return Observable with error if error could not be resolved.
-   */
-  public handledHttpErrorCars(errors: Observable<any>): Observable<any> {
-    return errors.pipe(
-      switchMap((httpErrorResponse: HttpErrorResponse) => {
-        if (httpErrorResponse.status === 503) {
-          return Observable.of(true);
-        }
-        return Observable.throwError(`${httpErrorResponse.error.message}`);
-      }),
-      take(5),
-      concat(Observable.throwError(`please wait, server error 503`)),
     );
   }
 }

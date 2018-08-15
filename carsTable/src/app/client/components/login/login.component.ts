@@ -77,6 +77,7 @@ export class LoginComponent implements OnInit {
   }
 
   public close(): void {
+    localStorage.setItem('token','dfg');
     this.dialogRef.close();
   }
 }

@@ -50,7 +50,7 @@ export class Car {
    * Init car.
    */
   constructor() {
-    this.make = new Make({});
+    this.make = new Make();
     this.bodyType = new BodyType();
     this.model = new CarModel();
   }

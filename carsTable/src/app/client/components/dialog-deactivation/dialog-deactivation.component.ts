@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 /**
  * Component with confirmation of the link by reference.
@@ -8,11 +8,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './dialog-deactivation.component.html',
   styleUrls: ['./dialog-deactivation.component.scss'],
 })
-export class DialogDeactivationComponent implements OnInit {
+export class DialogDeactivationComponent  {
 
   constructor() {}
-
-  public ngOnInit(): void {
-  }
-
 }

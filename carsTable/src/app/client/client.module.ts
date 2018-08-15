@@ -40,7 +40,7 @@ import { DialogDeactivationComponent } from './components/dialog-deactivation/di
     MatSnackBarModule,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CarsMatPaginatorIntl }],
-  exports: [TableComponent],
+
   declarations: [TableComponent, FormCarComponent, LoginComponent, DialogDeactivationComponent],
   entryComponents: [DialogDeactivationComponent, LoginComponent],
 })

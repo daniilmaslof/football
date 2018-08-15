@@ -60,10 +60,6 @@ export class CarsDatasourceService implements DataSource<Car> {
       tap(() => this.loadingSubject.next(true)),
       switchMap(value => {
         return this.carsService.getCars(value).pipe(
-          retryWhen(errors => {
-              return this.carsService.handledHttpErrorCars(errors);
-            },
-          ),
           tap(tableCar => this.paginationSubject.next(tableCar.pagination)),
           map(tableCar => tableCar.items),
           catchError(error => {

@@ -12,8 +12,8 @@ import { RecordDictionaryFeatureCar } from '../models/Car/record-dictionary-feat
   providedIn: 'root',
 })
 export class DictionaryCarsService {
-  private cacheMake$: Observable<Array<RecordDictionaryFeatureCar>>;
-  private cacheBodyType$: Observable<Array<RecordDictionaryFeatureCar>>;
+  private cacheMake$: Observable<RecordDictionaryFeatureCar[]>;
+  private cacheBodyType$: Observable<RecordDictionaryFeatureCar[]>;
 
   /**
    * @param httpClient Servise with http communication.
@@ -27,15 +27,11 @@ export class DictionaryCarsService {
    *
    * @return Observable with  List Make(id,name).
    */
-  public getMakes(): Observable<Array<RecordDictionaryFeatureCar>> {
+  public getMakes(): Observable<RecordDictionaryFeatureCar[]> {
     if (!this.cacheMake$) {
       this.cacheMake$ = this.httpClient
-        .get<Array<RecordDictionaryFeatureCar>>('https://backend-jscamp.saritasa-hosting.com//api/dictionaries/makes')
+        .get<RecordDictionaryFeatureCar[]>('https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes')
         .pipe(
-          retryWhen(errors => {
-              return this.handledHttpErrorDictionaryCar(errors);
-            },
-          ),
           map((response: any) => response.results),
           shareReplay(1),
         )
@@ -44,6 +40,7 @@ export class DictionaryCarsService {
 
     return this.cacheMake$;
   }
+
   /**
    * Get observable with dictionary( body type from  can the cache.
    * Cache decided not yet how not to update.
@@ -53,12 +50,8 @@ export class DictionaryCarsService {
   public getBodyTypes(): Observable<RecordDictionaryFeatureCar[]> {
     if (!this.cacheBodyType$) {
       this.cacheBodyType$ = this.httpClient
-        .get<RecordDictionaryFeatureCar[]>('https://backend-jscamp.saritasa-hosting.com//api/dictionaries/body-types')
+        .get<RecordDictionaryFeatureCar[]>('https://backend-jscamp.saritasa-hosting.com/api/dictionaries/body-types')
         .pipe(
-          retryWhen(errors => {
-              return this.handledHttpErrorDictionaryCar(errors);
-            },
-          ),
           map((response: any) => response.results),
           shareReplay(1),
         );
@@ -75,31 +68,9 @@ export class DictionaryCarsService {
    */
   public getModels(idMake: number): Observable<RecordDictionaryFeatureCar[]> {
     return this.httpClient
-      .get<RecordDictionaryFeatureCar[]>(`https://backend-jscamp.saritasa-hosting.com//api/dictionaries/makes/${idMake}/models`)
+      .get<RecordDictionaryFeatureCar[]>(`https://backend-jscamp.saritasa-hosting.com/api/dictionaries/makes/${idMake}/models`)
       .pipe(
         map((response: any) => response.results),
-        retryWhen(errors => {
-            return this.handledHttpErrorDictionaryCar(errors);
-          },
-        ));
-  }
-
-  /**
-   * shows what to do if there are errors on http communication.
-   *
-   * @param errors - observable containing http Error Response .
-   * @return Observable with error if error could not be resolved.
-   */
-  public handledHttpErrorDictionaryCar(errors: Observable<any>): Observable<any> {
-    return errors.pipe(
-      switchMap(httpErrorResponse => {
-        if (httpErrorResponse.status === 503) {
-          return Observable.of(true);
-        }
-        return Observable.throwError(`${httpErrorResponse.error.message}`);
-      }),
-      take(5),
-      concat(Observable.throwError(`server error 503`)),
-    );
+      );
   }
 }
