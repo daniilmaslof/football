@@ -7,6 +7,7 @@ import { catchError, concat, retry, retryWhen, switchMap, take } from 'rxjs/oper
 
 import { LoginComponent } from '../../client/components/login/login.component';
 
+const NumberOfRetries = 5;
 /**
  * Interceptor http request.
  */
@@ -14,6 +15,7 @@ import { LoginComponent } from '../../client/components/login/login.component';
   providedIn: 'root',
 })
 export class AuthInterceptorService implements HttpInterceptor {
+  private NumberOfRetries = 5;
 
   public constructor(private router: Router, private matDialog: MatDialog, private httpClient: HttpClient) {
 
@@ -41,7 +43,7 @@ export class AuthInterceptorService implements HttpInterceptor {
               }
               return Observable.throwError(httpErrorResponse);
             }),
-            take(5),
+            take(this.NumberOfRetries),
             concat(Observable.throwError(`please wait, server error 503`)),
           );
         },

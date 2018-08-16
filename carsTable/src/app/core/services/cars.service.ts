@@ -62,15 +62,16 @@ export class CarsService {
    * Create http  send query with  body = car.
    *
    * @param car You want to send to API.
-   * @param method Name http method(put or post).
    * @return Observable with Car with this id.
    */
-  public saveCar(method: string, car: Car): Observable<Car> {
+  public saveCar(car: Car): Observable<Car> {
+    let method = 'post';
     let url = 'https://backend-jscamp.saritasa-hosting.com/api/cars';
     if (localStorage.getItem('token')) {
       url = 'https://backend-jscamp.saritasa-hosting.com/api/with-auth/cars';
     }
-    if (method === 'put') {
+    if (car.id) {
+      method = 'put';
       url = url + `/${car.id}`;
     }
     return this.httpClient.request(method, url, { body: this.mapper.parseCartoCarDto(car) }).pipe(

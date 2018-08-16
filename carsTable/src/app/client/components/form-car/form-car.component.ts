@@ -85,14 +85,11 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
    */
   public onSubmit(): void {
     this.isFormSubmitted = true;
-    let method = 'put';
     this.car.updated = new Date();
     if (!this.car.id) {
       this.car.created = new Date();
-      method = 'post';
     }
-    this.car.updated = new Date();
-    this.carsServise.saveCar(method, this.car).subscribe(
+    this.carsServise.saveCar(this.car).subscribe(
       () => {
         this.isFormSubmitted = true;
         this.snackBar.open('the car is sent');

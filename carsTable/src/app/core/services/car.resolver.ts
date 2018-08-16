@@ -48,10 +48,6 @@ export class CarResolver implements Resolve<Observable<ResolvedData>> {
         map(car => {
           return { car: car };
         }),
-        retryWhen(errors => {
-            return this.carService.handledHttpErrorCars(errors);
-          },
-        ),
         catchError(err => Observable.of({ error: err })),
       );
     }
