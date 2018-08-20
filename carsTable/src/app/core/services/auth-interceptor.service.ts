@@ -1,13 +1,14 @@
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { catchError, concat, retry, retryWhen, switchMap, take } from 'rxjs/operators';
+import { catchError, concat, retryWhen, switchMap, take } from 'rxjs/operators';
 
 import { LoginComponent } from '../../client/components/login/login.component';
 
-const NumberOfRetries = 5;
+const NUMBER_OF_RETRIES = 5;
+
 /**
  * Interceptor http request.
  */
@@ -15,7 +16,6 @@ const NumberOfRetries = 5;
   providedIn: 'root',
 })
 export class AuthInterceptorService implements HttpInterceptor {
-  private NumberOfRetries = 5;
 
   public constructor(private router: Router, private matDialog: MatDialog, private httpClient: HttpClient) {
 
@@ -43,7 +43,7 @@ export class AuthInterceptorService implements HttpInterceptor {
               }
               return Observable.throwError(httpErrorResponse);
             }),
-            take(this.NumberOfRetries),
+            take(NUMBER_OF_RETRIES),
             concat(Observable.throwError(`please wait, server error 503`)),
           );
         },
@@ -64,6 +64,7 @@ export class AuthInterceptorService implements HttpInterceptor {
    */
   public handleHttpErrorResponse(httpErrorResponse: HttpErrorResponse, requestWithError: HttpRequest<any>): Observable<any> {
     if (httpErrorResponse.status === 401) {
+      localStorage.removeItem('token');
       const loginDialog = this.matDialog.open(LoginComponent, {
         width: '400px',
         height: '350px',

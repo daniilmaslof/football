@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, Event } from '@angular/router';
 
-
 import { LoginComponent } from './client/components/login/login.component';
 
 /**
@@ -33,6 +32,7 @@ export class AppComponent {
    *
    * @param router Angular router.
    * @param router.events Events navigation.
+   * @param dialog Material dialog.
    * @param dialog Material dialog.
    */
   public constructor(private router: Router, private dialog: MatDialog) {
@@ -66,5 +66,4 @@ export class AppComponent {
       height: '350px',
     } as MatDialogConfig<any>);
   }
-
 }

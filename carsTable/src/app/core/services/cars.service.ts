@@ -1,7 +1,7 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { concat, map, retryWhen, switchMap, take } from 'rxjs/operators';
+
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Rx';
 
 import { Car } from '../models/Car/car';

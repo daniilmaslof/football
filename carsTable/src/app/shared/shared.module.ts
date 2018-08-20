@@ -6,12 +6,13 @@ import {FormsModule} from '@angular/forms';
 import {
   MatButtonModule,
   MatInputModule,
-  MatPaginatorModule,
+  MatPaginatorModule, MatProgressBarModule,
   MatProgressSpinnerModule, MatSidenavModule,
   MatSortModule,
   MatTableModule, MatTabsModule, MatToolbarModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 @NgModule({
   imports: [
@@ -27,6 +28,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     MatSidenavModule,
     MatToolbarModule,
     MatTabsModule,
+    MatTabsModule,
+    MatSidenavModule,
+    MatProgressBarModule,
   ],
   declarations: [],
   exports: [
@@ -34,6 +38,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     MatTabsModule,
     MatSidenavModule,
     MatToolbarModule,
+    NgxPermissionsModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatProgressBarModule,
   ],
 })
 export class SharedModule {

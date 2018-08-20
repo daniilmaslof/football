@@ -56,7 +56,6 @@ export class CarsDatasourceService implements DataSource<Car> {
    */
   public connect(collectionViewer: CollectionViewer): Observable<Car[]> {
     return this.$actionsChangeTable.pipe(
-      takeUntil(this.$ngUnsubscribe),
       tap(() => this.loadingSubject.next(true)),
       switchMap(value => {
         return this.carsService.getCars(value).pipe(
@@ -69,6 +68,10 @@ export class CarsDatasourceService implements DataSource<Car> {
           finalize(() => this.loadingSubject.next(false)),
         );
       }),
+      /**
+       * Fixed an error with takeUntil Leaks when takeUntil to be before switchMap combineLatest.
+       */
+      takeUntil(this.$ngUnsubscribe),
     );
   }
 
