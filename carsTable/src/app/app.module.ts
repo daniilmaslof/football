@@ -9,6 +9,7 @@ import { ClientModule } from './client/client.module';
 import { CoreModule } from './core/core.module';
 import { LoginService } from './core/services/login.service';
 import { SharedModule } from './shared/shared.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CoreModule,
     NgxPermissionsModule.forRoot(),
     SharedModule,

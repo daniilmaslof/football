@@ -4,10 +4,10 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 import {
-  MatButtonModule,
+  MatButtonModule, MatFormFieldModule,
   MatInputModule,
   MatPaginatorModule, MatProgressBarModule,
-  MatProgressSpinnerModule, MatSidenavModule,
+  MatProgressSpinnerModule, MatSelectModule, MatSidenavModule,
   MatSortModule,
   MatTableModule, MatTabsModule, MatToolbarModule,
 } from '@angular/material';
@@ -18,7 +18,6 @@ import { NgxPermissionsModule } from 'ngx-permissions';
   imports: [
     CommonModule,
     FormsModule,
-    BrowserAnimationsModule,
     MatButtonModule,
     MatTableModule,
     MatPaginatorModule,
@@ -35,13 +34,15 @@ import { NgxPermissionsModule } from 'ngx-permissions';
   declarations: [],
   exports: [
     FormsModule,
+    MatFormFieldModule,
     MatTabsModule,
     MatSidenavModule,
     MatToolbarModule,
     NgxPermissionsModule,
-    MatTabsModule,
+    MatInputModule,
     MatButtonModule,
     MatSidenavModule,
+    MatSelectModule,
     MatProgressBarModule,
   ],
 })
