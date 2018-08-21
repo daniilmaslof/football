@@ -1,0 +1,15 @@
+.form {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  display: flex;
+}
+
+.form-field {
+  flex-basis: 40%;
+  margin: 10px;
+}
+
+.form-button {
+  align-self: center;
+  margin-right: 10px;
+}

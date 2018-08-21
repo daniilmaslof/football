@@ -1,0 +1,10 @@
+<td-expansion-panel *ngFor="let user of users$ | async">
+  <ng-template td-expansion-panel-label>
+    {{user.id}} {{user.firstName}} {{user.lastName}}
+  </ng-template>
+  <ng-template td-expansion-panel-sublabel>
+    role:{{user.role.name}}
+  </ng-template>
+  <app-user [user]="user" (deleteUser)="deleteUser($event)" (editUser)="editUser($event)"></app-user>
+</td-expansion-panel>
+
