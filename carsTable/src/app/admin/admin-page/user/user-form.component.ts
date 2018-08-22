@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 import { User } from '../../core-admin/state/user.model';
 
@@ -22,4 +23,9 @@ export class UserFormComponent {
   @Output()
   public editUser: EventEmitter<User> = new EventEmitter<User>();
 
+  private submiForm(formUser: NgForm): void {
+    if (formUser.valid) {
+      this.editUser.emit(this.user);
+    }
+  }
 }
