@@ -43,12 +43,13 @@ export class LoginService {
       () => this.permissionService.addPermission('GUEST'),
     );
   }
+
   /**
    * Get the  logged client role.
    */
   public getRole(): Promise<any> {
     return this.httpClient.get('https://backend-jscamp.saritasa-hosting.com/api/profile').pipe(
-      map((role: any) => role.role.name.toUpperCase()),
+      map(({ role }: any) => role.name.toUpperCase()),
       take(1),
     ).toPromise();
   }

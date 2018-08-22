@@ -33,7 +33,6 @@ export class AppComponent {
    * @param router Angular router.
    * @param router.events Events navigation.
    * @param dialog Material dialog.
-   * @param dialog Material dialog.
    */
   public constructor(private router: Router, private dialog: MatDialog) {
     this.router.events.subscribe((event: Event) => {
