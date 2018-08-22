@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ITdDataTableColumn, ITdDataTableSortChangeEvent, TdDataTableSortingOrder } from '@covalent/core';
 import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operators';
 
-import { IUserDto } from '../core-admin/services/dto-user';
 import { User } from '../core-admin/state/user.model';
 import { UsersQuery } from '../core-admin/state/users.query';
 import { UsersService } from '../core-admin/state/users.service';

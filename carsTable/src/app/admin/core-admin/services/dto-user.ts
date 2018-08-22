@@ -16,3 +16,10 @@ export interface Role {
   id: number;
   name: string;
 }
+/**
+ * The interface of the response coming from the server.
+ */
+export interface ICarListDto {
+  results: IUserDto[];
+  pagination: any;
+}

@@ -1,4 +1,4 @@
-<form class="form" #userForm="ngForm" (ngSubmit)="editUser.emit(user)">
+<form class="form" #userForm="ngForm" (ngSubmit)="submiForm(userForm)">
   <mat-form-field class="form-field">
     <input matInput [(ngModel)]="user.lastName" #lastName="ngModel" name="lastName" required placeholder="last name user"/>
     <mat-error *ngIf="lastName.errors &&(lastName.dirty || lastName.touched)">

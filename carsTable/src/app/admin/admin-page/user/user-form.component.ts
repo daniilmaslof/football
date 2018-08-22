@@ -17,13 +17,9 @@ export class UserFormComponent {
   @Input()
   public user: User;
   /**
-   * Event Emitter submit form.
+   * Event Emitter edit user.
    */
   @Output()
-  public editUser: EventEmitter<User> = new EventEmitter();
-  /**
-   * Event Emitter click delete button.
-   */
-  @Output()
-  public deleteUser: EventEmitter<User> = new EventEmitter();
+  public editUser: EventEmitter<User> = new EventEmitter<User>();
+
 }
