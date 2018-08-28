@@ -6,7 +6,7 @@ export class ParamsTableActions {
   /**
    * Current page in the table.
    */
-  public page: Number;
+  public page: number;
   /**
    * Search for a keyword by user.
    */

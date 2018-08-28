@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, Event } from '@angular/router';
+
+import { LoginComponent } from './client/components/login/login.component';
 
 /**
  * The component is responsible for navigation and the download indicator.
@@ -22,7 +25,6 @@ export class AppComponent {
   public navLinks = [
     { path: '/table', label: 'Table' },
     { path: '/formCar', label: 'Car Form' },
-    { path: '/login', label: 'login' },
   ];
 
   /**
@@ -30,8 +32,9 @@ export class AppComponent {
    *
    * @param router Angular router.
    * @param router.events Events navigation.
+   * @param dialog Material dialog.
    */
-  public constructor(private router: Router) {
+  public constructor(private router: Router, private dialog: MatDialog) {
     this.router.events.subscribe((event: Event) => {
       switch (true) {
         case event instanceof NavigationStart: {
@@ -53,4 +56,13 @@ export class AppComponent {
 
   }
 
+  /**
+   *Open Login Modal window.
+   */
+  public openLogin(): void {
+    const dialogLogin = this.dialog.open(LoginComponent, {
+      width: '250px',
+      height: '350px',
+    } as MatDialogConfig<any>);
+  }
 }

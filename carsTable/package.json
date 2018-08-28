@@ -22,8 +22,11 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
+    "@covalent/core": "2.0.0-beta.2",
+    "@datorama/akita": "^1.5.0",
     "core-js": "^2.5.4",
     "moment": "^2.22.2",
+    "ngx-permissions": "^6.0.1",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.2.2",
     "zone.js": "~0.8.26"

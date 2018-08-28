@@ -9,7 +9,8 @@ import { Make } from '../models/Car/make';
 import { Pagination } from '../models/Car/pagination';
 import { ParamsTableActions } from '../models/Car/params-table-actions';
 
-import { ICarDto, ICarPostDto, IPaginationApiDto } from './dto-cars';
+import { ICarDto, ICarPostDto } from './dto-cars';
+import { IPaginationApiDto } from './pagination-api-dto';
 
 /**
  * Class stores parsing functions that converts data from the server to classes client.
@@ -24,15 +25,15 @@ export class MapperCarsService {
    * Parse pagination of api.
    *
    * @param paginationFromApi Pagination sent from API.
-   * @return Data converted to a class with pagination from the pagination from API.
+   * @return Data converted to a class with pagination from the pagination from API and makes indexing pages from zero.
    */
   public parseToPagination(paginationFromApi: IPaginationApiDto): Pagination {
     const pagination = new Pagination();
     pagination.total = paginationFromApi.total;
     pagination.count = paginationFromApi.count;
     pagination.perPage = paginationFromApi.per_page;
-    pagination.currentPage = paginationFromApi.current_page;
-    pagination.totalPages = paginationFromApi.total_pages;
+    pagination.currentPage = paginationFromApi.current_page - 1;
+    pagination.totalPages = paginationFromApi.total_pages - 1;
     return pagination;
   }
 
@@ -63,20 +64,17 @@ export class MapperCarsService {
    * @return car that we can send to the server.
    */
   public parseCartoCarDto(car: Car): ICarPostDto {
-    const carPostDto = {} as ICarPostDto;
-    if (car.id) {
-      carPostDto.id = car.id;
-    }
-    carPostDto.make_id = car.make.id;
-    carPostDto.body_type_id = car.bodyType.id;
-    carPostDto.car_model_id = car.model.id;
-    carPostDto.mileage = car.mileage;
-    carPostDto.description = car.description;
-    carPostDto.year = car.year;
-    carPostDto.created_at = new DatePipe('en-US').transform(car.created, 'yyyy-mm-dd hh:mm:ss');
-    carPostDto.updated_at = new DatePipe('en-US').transform(car.updated, 'yyyy-mm-dd hh:mm:ss');
-    console.log(carPostDto);
-    return carPostDto;
+    return {
+      make_id: car.make.id,
+      body_type_id: car.bodyType.id,
+      car_model_id: car.model.id,
+      mileage: car.mileage,
+      id: car.id,
+      description: car.description,
+      year: car.year,
+      created_at: new DatePipe('en-US').transform(car.created, 'yyyy-mm-dd hh:mm:ss'),
+      updated_at: new DatePipe('en-US').transform(car.updated, 'yyyy-mm-dd hh:mm:ss'),
+    };
   }
 
   /**
@@ -110,6 +108,7 @@ export class MapperCarsService {
     let httpParams: HttpParams = new HttpParams();
     if (paramsTableActions) {
       if (paramsTableActions.page) {
+
         httpParams = httpParams.set('page', (paramsTableActions.page).toString());
       }
       if (paramsTableActions.keyword) {

@@ -10,10 +10,11 @@ export class Make {
    * Name make.
    */
   public name: string;
+
   /**
    * Init make.
    */
-  constructor(make: { id?: number, name?: string }) {
+  constructor(make: { id?: number, name?: string } = {}) {
     this.id = make.id;
     this.name = make.name;
   }
