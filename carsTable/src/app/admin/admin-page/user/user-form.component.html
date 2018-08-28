@@ -1,0 +1,53 @@
+<form class="form" #userForm="ngForm" (ngSubmit)="submiForm(userForm)">
+  <mat-form-field class="form-field">
+    <input matInput [(ngModel)]="user.lastName" #lastName="ngModel" name="lastName" required placeholder="last name user"/>
+    <mat-error *ngIf="lastName.errors &&(lastName.dirty || lastName.touched)">
+    <span [hidden]="!lastName.errors.required">
+      last Name is required
+    </span>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <input
+      matInput [(ngModel)]="user.firstName"
+      #firstName="ngModel"
+      name="firstName"
+      required
+      placeholder="first name user"/>
+    <mat-error *ngIf="firstName.errors &&(firstName.dirty || firstName.touched)">
+    <span [hidden]="!firstName.errors.required">
+      first name is required
+    </span>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <input matInput [(ngModel)]="user.email" #email="ngModel" name="email" placeholder="email user"/>
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <mat-select [(ngModel)]="user.gender" #gender="ngModel" name="gender" required placeholder="gender">
+      <mat-option [value]="'Male'">
+        male
+      </mat-option>
+      <mat-option [value]="'Female'">
+        female
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <input matInput [(ngModel)]="user.role.name" #role="ngModel" name="role" required placeholder="role user"/>
+    <mat-error *ngIf="role.errors &&(role.dirty || role.touched)">
+    <span [hidden]="!role.errors.required">
+      role is required
+    </span>
+    </mat-error>
+  </mat-form-field>
+  <button
+    class="form-button"
+    mat-raised-button color="primary" type="submit"
+    [disabled]="!userForm.form.valid || !userForm.form.touched">
+    Submit user
+  </button>
+  <button class="form-button" mat-raised-button color="warn" (click)="deleteUser.emit(user)">
+    Delete user
+  </button>
+</form>
