@@ -10,6 +10,12 @@ import { CoreModule } from './core/core.module';
 import { LoginService } from './core/services/login.service';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from "../environments/environment";
+import { AngularFireModule } from "@angular/fire";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireStorageModule } from "@angular/fire/storage";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { AngularFireAuthModule } from "@angular/fire/auth";
 
 @NgModule({
   declarations: [
@@ -23,6 +29,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SharedModule,
     ClientModule,
     AppRoutingModule,
+    AngularFireDatabaseModule,
+    AngularFireStorageModule,
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    // To initialize AngularFire
+    AngularFireModule.initializeApp(environment.firebase),
   ],
   providers: [{
     provide: APP_INITIALIZER,

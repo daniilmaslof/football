@@ -2,7 +2,6 @@ import { CollectionViewer } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/table';
 import { Injectable } from '@angular/core';
 import { catchError, finalize, map, retryWhen, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
 import { Car } from '../models/Car/car';
@@ -10,6 +9,7 @@ import { Pagination } from '../models/Car/pagination';
 import { ParamsTableActions } from '../models/Car/params-table-actions';
 
 import { CarsService } from './cars.service';
+import { BehaviorSubject, Observable, of } from "rxjs";
 
 /**
  * Class custom Observable-based Angular CDK Data Source.
@@ -63,7 +63,7 @@ export class CarsDatasourceService implements DataSource<Car> {
           map(tableCar => tableCar.items),
           catchError(error => {
             this.errorSubject.next(error);
-            return Observable.of([]);
+            return of([]);
           }),
           finalize(() => this.loadingSubject.next(false)),
         );

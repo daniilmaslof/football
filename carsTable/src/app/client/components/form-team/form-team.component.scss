@@ -1,0 +1,11 @@
+.wrapper-players{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.wrapper-players mat-form-field{
+  width: 300px;
+}
+.players{
+  display: flex;
+}

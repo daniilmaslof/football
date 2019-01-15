@@ -2,10 +2,12 @@ import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor,
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { catchError, concat, retryWhen, switchMap, take } from 'rxjs/operators';
+
+
 
 import { LoginComponent } from '../../client/components/login/login.component';
+import { concat, Observable, of, throwError } from "rxjs";
+import { catchError, retryWhen, switchMap, take } from "rxjs/operators";
 
 const NUMBER_OF_RETRIES = 5;
 
@@ -35,16 +37,16 @@ export class AuthInterceptorService implements HttpInterceptor {
     }
     return next.handle(cloned).pipe(
       retryWhen(errors => {
+        console.log(errors);
           return errors.pipe(
             switchMap((httpErrorResponse: HttpErrorResponse) => {
 
               if (httpErrorResponse.status === 503) {
-                return Observable.of(true);
+                return of(true);
               }
-              return Observable.throwError(httpErrorResponse);
+              return throwError(httpErrorResponse);
             }),
             take(NUMBER_OF_RETRIES),
-            concat(Observable.throwError(`please wait, server error 503`)),
           );
         },
       ),
@@ -75,9 +77,9 @@ export class AuthInterceptorService implements HttpInterceptor {
             if (loggedOn) {
               return this.httpClient.request(requestWithError);
             }
-            return Observable.throwError(httpErrorResponse);
+            return throwError(httpErrorResponse);
           }));
     }
-    return Observable.throwError(httpErrorResponse);
+    return throwError(httpErrorResponse);
   }
 }

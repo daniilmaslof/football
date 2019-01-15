@@ -1,24 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { PageEvent, Sort } from '@angular/material';
-
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-
-
-import { ParamsTableActions } from '../../../core/models/Car/params-table-actions';
-import { CarsDatasourceService } from '../../../core/services/cars.datasource.service';
-import { CarsService } from '../../../core/services/cars.service';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { CarsDatasourceService } from "../../../core/services/cars.datasource.service";
 import { BehaviorSubject, Subject } from "rxjs";
+import { ParamsTableActions } from "../../../core/models/Car/params-table-actions";
+import { FormControl } from "@angular/forms";
+import { CarsService } from "../../../core/services/cars.service";
+import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { PageEvent, Sort } from "@angular/material";
 
-/**
- * Component with table car.
- */
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss'],
+  selector: 'app-tournament-table',
+  templateUrl: './tournament-table.component.html',
+  styleUrls: ['./tournament-table.component.scss']
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TournamentTableComponent implements OnInit,OnDestroy {
+
   /**
    * Object class that implements CDK Data Source, stores observable pagination,error,loading table.
    */

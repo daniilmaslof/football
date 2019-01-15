@@ -1,0 +1,51 @@
+<ng-template #loading>
+  <mat-spinner class="spinner"
+               color="primary">
+  </mat-spinner>
+</ng-template>
+<form class="form" (ngSubmit)="onSubmit()" #carForm="ngForm">
+  <mat-form-field>
+    <input matInput [(ngModel)]="team.name" #name="ngModel" name="name" required placeholder="name team"/>
+    <mat-error *ngIf="name.errors &&(name.dirty || name.touched)">
+    <span [hidden]="!name.errors.required">
+      name is required
+    </span>
+    </mat-error>
+  </mat-form-field>
+  <div class="players">
+  <div class="wrapper-players">
+          <h3>Основные игроки</h3>
+  <mat-form-field *ngFor="let player of team.firstPlayers;index as i;first as isFirst">
+          <input matInput [(ngModel)]="player" #qtyInput="ngModel" name="firstPlayers-{{i}}" required [placeholder]="isFirst ? 'Фамилия и имя вратаря': 'Фамилия и имя игрока'"/>
+    <mat-error *ngIf="qtyInput.errors &&(qtyInput.dirty || qtyInput.touched)">
+    <span [hidden]="!qtyInput.errors.required">
+      Нужно заполнить {{i}} Игрока
+    </span>
+    </mat-error>
+  </mat-form-field>
+  </div>
+  <div class="wrapper-players">
+          <h3>Запасные игроки </h3>
+  <mat-form-field *ngFor="let player of team.secondPlayers;index as i;">
+    <input matInput [(ngModel)]="player" #qtiInput="ngModel" name="secondPlayers-{{i}}" required placeholder="Фамилия и имя игрока"/>
+    <mat-error *ngIf="qtiInput.errors &&(qtiInput.dirty || qtiInput.touched)">
+    <span [hidden]="!qtiInput.errors.required">
+      player {{i}} is required
+    </span>
+    </mat-error>
+  </mat-form-field>
+  </div>
+  </div>
+  <!--<mat-form-field>-->
+    <!--<textarea matInput placeholder="Description" [(ngModel)]="car.description" #description="ngModel" required-->
+              <!--name="description"-->
+              <!--rows="3"></textarea>-->
+    <!--<mat-error *ngIf="description.errors &&(description.dirty || description.touched)">-->
+    <!--<span [hidden]="!description.errors.required">-->
+      <!--description is required-->
+    <!--</span>-->
+    <!--</mat-error>-->
+  <!--</mat-form-field>-->
+  <button mat-raised-button color="primary" type="submit" [disabled]="!carForm.form.valid">Submit</button>
+</form>
+<mat-error class="error" *ngIf="error"> {{error}}</mat-error>

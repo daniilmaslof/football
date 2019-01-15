@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 import { catchError, finalize, map, retryWhen, switchMap, takeUntil } from 'rxjs/operators';
 
 import { Car } from '../models/Car/car';
 
 import { CarsService } from './cars.service';
+import { Observable, of } from "rxjs";
 
 /**
  * Resolve does not support observable error state.
@@ -48,9 +48,9 @@ export class CarResolver implements Resolve<Observable<ResolvedData>> {
         map(car => {
           return { car: car };
         }),
-        catchError(err => Observable.of({ error: err })),
+        catchError(err => of({ error: err })),
       );
     }
-    return Observable.of({ car: new Car() });
+    return of({ car: new Car() });
   }
 }

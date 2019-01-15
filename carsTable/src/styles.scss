@@ -13,7 +13,7 @@ $warn: mat-palette($mat-red, 600);
 $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);
-@include covalent-theme($theme, $typography);
+
 
 .blue-orange {
   $primary2: mat-palette($mat-blue, 700);
@@ -24,4 +24,13 @@ $theme: mat-light-theme($primary, $accent, $warn);
 
   @include angular-material-theme($blue-orange);
   @include covalent-theme($blue-orange);
+}
+.dialog-no-padding-panel .mat-dialog-container{
+  width: 70vw;
+  height: 89vh;
+  padding: 0;
+  border-radius: 30px 30px 0 0  ;
+  .mat-horizontal-stepper-header-container{
+    background: mat-color(map-get($theme, primary),500);
+  }
 }

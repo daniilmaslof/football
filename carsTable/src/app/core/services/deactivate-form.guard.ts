@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable } from "rxjs";
 
 /**
  * Interface interface that must implement component with guard and method return may or may not.

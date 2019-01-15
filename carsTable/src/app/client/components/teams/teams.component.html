@@ -1,0 +1,8 @@
+<mat-card crmCardDecorate class="component-wrap">
+  <mat-card-header class="header">
+    <mat-card-title class="header-title">Teams</mat-card-title>
+  </mat-card-header>
+  <mat-progress-bar *ngIf="isLoadingDailyReports$ | async" mode="indeterminate" color="primary"></mat-progress-bar>
+  <app-teams-table [team$]="team$"></app-teams-table>
+</mat-card>
+

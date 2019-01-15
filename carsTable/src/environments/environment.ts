@@ -5,4 +5,12 @@
 
 export const environment = {
   production: false,
+  firebase: {
+    apiKey: 'AIzaSyAB7sqNUH6YZgg85j6V31Vh0cKuRC_Fg9U',
+    authDomain: 'football-a6233.firebaseapp.com',
+    databaseURL: 'https://football-a6233.firebaseio.com',
+    projectId: 'football-a6233',
+    storageBucket: 'football-a6233.appspot.com',
+    messagingSenderId: '61561793994',
+  },
 };

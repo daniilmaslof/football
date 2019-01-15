@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatSelectChange, MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
 import { Car } from '../../../core/models/Car/car';
 import { RecordDictionaryFeatureCar } from '../../../core/models/Car/record-dictionary-feature-car';
@@ -10,6 +9,8 @@ import { CarsService } from '../../../core/services/cars.service';
 import { CanComponentDeactivate } from '../../../core/services/deactivate-form.guard';
 import { DictionaryCarsService } from '../../../core/services/dictionary-cars.service';
 import { DialogDeactivationComponent } from '../dialog-deactivation/dialog-deactivation.component';
+import { Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
 
 /**
  * Component with car form.
@@ -110,17 +111,17 @@ export class FormCarComponent implements OnInit, CanComponentDeactivate {
    */
   public canDeactivate(): Observable<boolean> {
     if (this.error) {
-      return Observable.of(true);
+      return of(true);
     }
     if (this.carForm.touched && !this.isFormSubmitted) {
       const dialogDeactivate = this.dialog.open(DialogDeactivationComponent, {
         width: '400px',
         height: '350px',
       } as MatDialogConfig<any>);
-      return dialogDeactivate.afterClosed().map(
-        value => value as boolean,
-      );
+      return dialogDeactivate.afterClosed().pipe(
+        map(value => value as boolean)
+    )
     }
-    return Observable.of(true);
+    return of(true);
   }
 }

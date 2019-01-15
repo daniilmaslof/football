@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs/Rx';
 
 import { Car } from '../models/Car/car';
 import { ParamsTableActions } from '../models/Car/params-table-actions';
@@ -10,6 +9,7 @@ import { TableCars } from '../models/Car/table-cars';
 
 import { ICarDto } from './dto-cars';
 import { MapperCarsService } from './mapper-cars.service';
+import { Observable } from "rxjs";
 
 /**
  * Service communication with http server https://backend-jscamp.saritasa-hosting.com/api/cars.

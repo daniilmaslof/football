@@ -1,0 +1,46 @@
+<mat-table class="table-reports" [dataSource]="filteredDailyReportsWithExpandRow$ | async">
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef> Id</mat-header-cell>
+    <mat-cell *matCellDef="let data; let i = index;"> #{{i/2}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+    <mat-cell *matCellDef="let data">
+      <a [routerLink]="['/teamForm']" [queryParams]="{id: data.idCollection}">  {{data.name}}</a>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="expandedDetail">
+    <mat-cell *matCellDef="let data;let i = index;let first = first">
+      <div class="expanded-row">
+        <div class="expanded-row-text">
+          <h4>Основной состав:</h4>
+          <p class="expanded-row-content" *ngFor="let players of data.team.firstPlayers;index as i;first as isFirst">
+          <span *ngIf="isFirst">
+            Вратарь: {{players}}
+          </span>
+            <span *ngIf="!isFirst">
+            Игрок {{i}}: {{players}}
+          </span>
+          </p>
+        </div>
+        <div class="expanded-row-questions">
+          <h4>Запасные:</h4>
+          <p class="expanded-row-content" *ngFor="let players of data.team.secondPlayers;let i = index;">Запасной игрок {{i}}: {{players}}</p>
+        </div>
+      </div>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row class="table-reports-header" *matHeaderRowDef="displayedColumns;"></mat-header-row>
+  <div class="rows">
+    <mat-row *matRowDef="let row; columns: displayedColumns;index as i;first as isFirst"
+             matRipple
+             class="element-row"
+             [class.expanded]="expandedElement === row"
+             (click)="toExpandRow(row)"></mat-row>
+    <mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+             [@detailExpand]="row.team === expandedElement ? 'expanded' : 'collapsed'"
+             class="expanded-row-container"
+    >
+    </mat-row>
+  </div>
+</mat-table>

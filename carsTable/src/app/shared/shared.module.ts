@@ -13,29 +13,22 @@ import {
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { MaterialModule } from "./material/material.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    MatButtonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    MatInputModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatTabsModule,
-    MatTabsModule,
-    MatSidenavModule,
-    MatProgressBarModule,
+    MaterialModule,
+    NgxPermissionsModule,
+    BrowserAnimationsModule,
   ],
   declarations: [],
   exports: [
     FormsModule,
-    MatFormFieldModule,
+    MaterialModule,
     MatTabsModule,
+    BrowserAnimationsModule,
     MatSidenavModule,
     MatToolbarModule,
     NgxPermissionsModule,

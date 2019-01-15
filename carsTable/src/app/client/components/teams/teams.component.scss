@@ -1,0 +1,56 @@
+.component-wrap {
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 18px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-title {
+    color: #66ccff;
+    font-size: 1.125rem;
+    height: 24px;
+    margin-left: -16px;
+    line-height: 24px;
+  }
+}
+
+.datepiker {
+  display: block;
+  max-width: 130px;
+}
+
+.header-table-reports {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inline-filters {
+  display: flex;
+  > *:not(:first-child) {
+    margin-left: 2.5rem;
+  }
+  .mat-checkbox {
+    align-self: center;
+  }
+  .title-checkbox {
+    color: #818891;
+    letter-spacing: 0.5px;
+  }
+  .mat-form-field {
+    min-width: 250px;
+  }
+
+  .date-filter {
+    color: #66ccff;
+    font-size: 0.875rem;
+    max-width: 130px;
+
+    &-icon {
+      font-size: 1.3em;
+    }
+  }
+}
